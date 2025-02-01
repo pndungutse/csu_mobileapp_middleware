@@ -1,0 +1,13 @@
+package com.dsu.hope_bank_app_middleware.bank_services.service;
+
+import com.dsu.hope_bank_app_middleware.bank_services.request.BankServiceRequest;
+import com.dsu.hope_bank_app_middleware.bank_services.response.BankServiceFullResponse;
+import com.dsu.hope_bank_app_middleware.bank_services.response.BankServiceResponse;
+import org.springframework.http.ResponseEntity;
+
+public interface BankServiceService {
+    ResponseEntity<BankServiceResponse> createBankService(BankServiceRequest request);
+    ResponseEntity<BankServiceResponse> getBankServiceById(String id);
+    ResponseEntity<BankServiceFullResponse> getAllBankServices(int pageNo, int pageSize, String sortBy, String sortDir);
+    ResponseEntity<BankServiceResponse> updateBankService(String id, BankServiceRequest request);
+}

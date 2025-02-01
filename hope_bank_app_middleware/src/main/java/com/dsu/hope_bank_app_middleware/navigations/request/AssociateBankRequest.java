@@ -1,0 +1,19 @@
+package com.dsu.hope_bank_app_middleware.navigations.request;
+
+import com.dsu.hope_bank_app_middleware.general_enumerations.Status;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class AssociateBankRequest {
+    @JsonProperty("associate_bank_name")
+    private String associateBankName;
+    @JsonProperty("associate_bank_status")
+    private Status associateBankStatus;
+}
