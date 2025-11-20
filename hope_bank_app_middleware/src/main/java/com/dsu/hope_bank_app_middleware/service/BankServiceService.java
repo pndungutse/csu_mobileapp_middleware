@@ -1,8 +1,8 @@
-package com.dsu.hope_bank_app_middleware.bank_services.service;
+package com.dsu.hope_bank_app_middleware.service;
 
-import com.dsu.hope_bank_app_middleware.bank_services.request.BankServiceRequest;
-import com.dsu.hope_bank_app_middleware.bank_services.response.BankServiceFullResponse;
-import com.dsu.hope_bank_app_middleware.bank_services.response.BankServiceResponse;
+import com.dsu.hope_bank_app_middleware.request.navigations.BankServiceRequest;
+import com.dsu.hope_bank_app_middleware.response.navigations.BankServiceFullResponse;
+import com.dsu.hope_bank_app_middleware.response.navigations.BankServiceResponse;
 import org.springframework.http.ResponseEntity;
 
 public interface BankServiceService {

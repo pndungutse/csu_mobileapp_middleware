@@ -1,8 +1,10 @@
-package com.dsu.hope_bank_app_middleware.navigations.entity;
+package com.dsu.hope_bank_app_middleware.entity.navigations;
 
-import com.dsu.hope_bank_app_middleware.navigations.enumeration.FormElementType;
-import com.dsu.hope_bank_app_middleware.general_enumerations.Status;
-import com.dsu.hope_bank_app_middleware.navigations.enumeration.ValueType;
+import com.dsu.hope_bank_app_middleware.enumeration.FormElementSelectItem;
+import com.dsu.hope_bank_app_middleware.enumeration.FormElementType;
+import com.dsu.hope_bank_app_middleware.enumeration.Status;
+import com.dsu.hope_bank_app_middleware.enumeration.ValueType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +30,12 @@ public class FormElement {
     private FormElementType formElementType;
     private String formElementPlaceHolder;
     private Status formElementStatus;
+    private Integer formElementFieldNo;
+    private FormElementSelectItem formElementSelectItem;
+    private Boolean formElementFetchDetail;
+    private Boolean formElementNoInputField;
+    private String formElementFetchInfoUrl;
+    private String formElementDefaultValue;
     private Date formElementAddedDate;
     private Date formElementUpdatedDate;
 

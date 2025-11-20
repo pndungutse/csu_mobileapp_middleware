@@ -1,6 +1,6 @@
 package com.dsu.hope_bank_app_middleware.exception;
 
-import com.dsu.hope_bank_app_middleware.general_enumerations.ResponseType;
+import com.dsu.hope_bank_app_middleware.enumeration.ResponseType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,7 +1,6 @@
-package com.dsu.hope_bank_app_middleware.navigations.response;
+package com.dsu.hope_bank_app_middleware.response.navigations;
 
-import com.dsu.hope_bank_app_middleware.general_enumerations.Status;
-import com.dsu.hope_bank_app_middleware.navigations.entity.MainMenu;
+import com.dsu.hope_bank_app_middleware.enumeration.Status;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

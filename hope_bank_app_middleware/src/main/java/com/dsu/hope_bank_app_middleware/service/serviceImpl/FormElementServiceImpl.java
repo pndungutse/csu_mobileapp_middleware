@@ -1,21 +1,22 @@
-package com.dsu.hope_bank_app_middleware.navigations.service.serviceImpl;
+package com.dsu.hope_bank_app_middleware.service.serviceImpl;
 
 import com.dsu.hope_bank_app_middleware.exception.ResourceNotFoundException;
 import com.dsu.hope_bank_app_middleware.exception.SuccessResponse;
-import com.dsu.hope_bank_app_middleware.general_enumerations.ResponseType;
-import com.dsu.hope_bank_app_middleware.navigations.entity.FormElement;
-import com.dsu.hope_bank_app_middleware.navigations.entity.SubMenu;
-import com.dsu.hope_bank_app_middleware.navigations.repository.FormElementRepository;
-import com.dsu.hope_bank_app_middleware.navigations.repository.SubMenuRepository;
+import com.dsu.hope_bank_app_middleware.enumeration.ResponseType;
+import com.dsu.hope_bank_app_middleware.entity.navigations.FormElement;
+import com.dsu.hope_bank_app_middleware.entity.navigations.SubMenu;
+import com.dsu.hope_bank_app_middleware.repository.FormElementRepository;
+import com.dsu.hope_bank_app_middleware.repository.SubMenuRepository;
 import com.dsu.hope_bank_app_middleware.request.navigations.FormElementRequest;
 import com.dsu.hope_bank_app_middleware.response.navigations.FormElementResponse;
-import com.dsu.hope_bank_app_middleware.navigations.service.FormElementService;
+import com.dsu.hope_bank_app_middleware.service.FormElementService;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +43,12 @@ public class FormElementServiceImpl implements FormElementService {
         formElement.setFormElementType(request.getFormElementType());
         formElement.setFormElementValueType(request.getFormElementValueType());
         formElement.setFormElementStatus(request.getFormElementStatus());
+        formElement.setFormElementFieldNo(request.getFormElementFieldNo());
+        formElement.setFormElementSelectItem(request.getFormElementSelectItem());
+        formElement.setFormElementFetchDetail(request.getFormElementFetchDetail());
+        formElement.setFormElementNoInputField(request.getFormElementNoInputField());
+        formElement.setFormElementFetchInfoUrl(request.getFormElementFetchInfoUrl());
+        formElement.setFormElementDefaultValue(request.getFormElementDefaultValue());
         formElement.setFormElementAddedDate(new Date());
         formElement.setSubMenu(subMenu);
 
@@ -80,10 +87,10 @@ public class FormElementServiceImpl implements FormElementService {
         System.out.println("Id: "+subMenuId);
 
         // Fetch all main menu items associated with the bank ID
-        List<FormElement> formElements = formElementRepository.findBySubMenu_Id(subMenuId);
+        List<FormElement> formElements = formElementRepository.findBySubMenu_IdOrderByFormElementFieldNoAsc(subMenuId);
 
         if (formElements.isEmpty()) {
-            throw new ResourceNotFoundException("No form elements found for the sub menu ID: " + subMenuId);
+            return ResponseEntity.ok(Collections.emptyList());
         }
 
         // Map each MainMenu entity to a MainMenuResponse object
@@ -117,6 +124,13 @@ public class FormElementServiceImpl implements FormElementService {
         formElement.setFormElementType(request.getFormElementType());
         formElement.setFormElementValueType(request.getFormElementValueType());
         formElement.setFormElementStatus(request.getFormElementStatus());
+        formElement.setFormElementFieldNo(request.getFormElementFieldNo());
+        formElement.setFormElementSelectItem(request.getFormElementSelectItem());
+        formElement.setFormElementFetchDetail(request.getFormElementFetchDetail());
+        formElement.setFormElementNoInputField(request.getFormElementNoInputField());
+        formElement.setFormElementFetchInfoUrl(request.getFormElementFetchInfoUrl());
+        formElement.setFormElementDefaultValue(request.getFormElementDefaultValue());
+
         formElement.setFormElementUpdatedDate(new Date());
 
         FormElement updatedFormElement = formElementRepository.save(formElement);
@@ -161,6 +175,12 @@ public class FormElementServiceImpl implements FormElementService {
                 .formElementValueType(formElement.getFormElementValueType())
                 .formElementType(formElement.getFormElementType())
                 .formElementStatus(formElement.getFormElementStatus())
+                .formElementFieldNo(formElement.getFormElementFieldNo())
+                .formElementSelectItem(formElement.getFormElementSelectItem())
+                .formElementFetchDetail(formElement.getFormElementFetchDetail())
+                .formElementNoInputField(formElement.getFormElementNoInputField())
+                .formElementFetchInfoUrl(formElement.getFormElementFetchInfoUrl())
+                .formElementDefaultValue(formElement.getFormElementDefaultValue())
                 .formElementAddedDate(formElement.getFormElementAddedDate())
                 .formElementUpdatedDate(formElement.getFormElementUpdatedDate())
                 .subMenuItemName(

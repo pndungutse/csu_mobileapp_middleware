@@ -1,7 +1,8 @@
-package com.dsu.hope_bank_app_middleware.navigations.entity;
+package com.dsu.hope_bank_app_middleware.entity.navigations;
 
-import com.dsu.hope_bank_app_middleware.general_enumerations.Status;
-import com.dsu.hope_bank_app_middleware.navigations.enumeration.SubMenuCategory;
+import com.dsu.hope_bank_app_middleware.enumeration.MainMenuBelong;
+import com.dsu.hope_bank_app_middleware.enumeration.Status;
+import com.dsu.hope_bank_app_middleware.enumeration.SubMenuCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -30,13 +30,19 @@ public class SubMenu {
     private Status subMenuItemStatus;
     @JsonProperty("icon")
     private String icon;
+    @JsonProperty("sub_menu_action_url")
+    private String subMenuActionUrl;
     @JsonProperty("sub_menu_item_category")
     private SubMenuCategory subMenuCategory;
+    @JsonProperty("sub_menu_belong_to_menu")
+    private MainMenuBelong subMenuBelongToMenu;
+    @JsonProperty("sub_menu_display_order")
+    private Integer subMenuDisplayOrder;
     @JsonProperty("sub_menu_item_added_date")
     private Date subMenuItemAddedDate;
     @JsonProperty("sub_menu_item_updated_date")
     private Date subMenuItemUpdatedDate;
 
     @DBRef
-    private MainMenu mainMenu;
+    private AssociateBank bank;
 }

@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>hope_bank_app_middleware</name>
-	<description>HOPE bank app middleware</description>
+	<description>CSU bank app middleware</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -114,7 +114,7 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.0</version>
+			<version>1.6.15</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -172,8 +172,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>11</source>
-					<target>11</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 		</plugins>

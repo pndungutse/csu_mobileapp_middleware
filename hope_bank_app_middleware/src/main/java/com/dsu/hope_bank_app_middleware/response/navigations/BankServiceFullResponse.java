@@ -1,4 +1,4 @@
-package com.dsu.hope_bank_app_middleware.bank_services.response;
+package com.dsu.hope_bank_app_middleware.response.navigations;
 
 import com.dsu.hope_bank_app_middleware.exception.SuccessResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;

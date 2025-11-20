@@ -1,10 +1,8 @@
-package com.dsu.hope_bank_app_middleware.navigations.controller;
+package com.dsu.hope_bank_app_middleware.controller.navigations;
 
-import com.dsu.hope_bank_app_middleware.navigations.request.FormElementRequest;
-import com.dsu.hope_bank_app_middleware.navigations.response.FormElementFullResponse;
-import com.dsu.hope_bank_app_middleware.navigations.response.FormElementResponse;
-import com.dsu.hope_bank_app_middleware.navigations.service.FormElementService;
-import com.dsu.hope_bank_app_middleware.utils.AppConstants;
+import com.dsu.hope_bank_app_middleware.request.navigations.FormElementRequest;
+import com.dsu.hope_bank_app_middleware.response.navigations.FormElementResponse;
+import com.dsu.hope_bank_app_middleware.service.FormElementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/navigation")
+@CrossOrigin(origins = "*")
 public class FormElementController {
 
     @Autowired

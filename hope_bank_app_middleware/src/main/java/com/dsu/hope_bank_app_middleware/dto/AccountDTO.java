@@ -1,4 +1,4 @@
-package com.dsu.hope_bank_app_middleware.accounts.dto;
+package com.dsu.hope_bank_app_middleware.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

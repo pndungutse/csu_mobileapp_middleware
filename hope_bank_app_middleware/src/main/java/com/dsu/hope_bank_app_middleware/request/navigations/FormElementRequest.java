@@ -1,8 +1,9 @@
-package com.dsu.hope_bank_app_middleware.navigations.request;
+package com.dsu.hope_bank_app_middleware.request.navigations;
 
-import com.dsu.hope_bank_app_middleware.navigations.enumeration.FormElementType;
-import com.dsu.hope_bank_app_middleware.general_enumerations.Status;
-import com.dsu.hope_bank_app_middleware.navigations.enumeration.ValueType;
+import com.dsu.hope_bank_app_middleware.enumeration.FormElementSelectItem;
+import com.dsu.hope_bank_app_middleware.enumeration.FormElementType;
+import com.dsu.hope_bank_app_middleware.enumeration.Status;
+import com.dsu.hope_bank_app_middleware.enumeration.ValueType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,4 +29,16 @@ public class FormElementRequest {
     private String formElementPlaceHolder;
     @JsonProperty("form_element_status")
     private Status formElementStatus;
+    @JsonProperty("form_element_field_no")
+    private Integer formElementFieldNo;
+    @JsonProperty("form_element_select_item")
+    private FormElementSelectItem formElementSelectItem;
+    @JsonProperty("form_element_fetch_detail")
+    private Boolean formElementFetchDetail;
+    @JsonProperty("form_element_no_input_field")
+    private Boolean formElementNoInputField;
+    @JsonProperty("form_element_fetch_info_url")
+    private String formElementFetchInfoUrl;
+    @JsonProperty("form_element_default_value")
+    private String formElementDefaultValue;
 }

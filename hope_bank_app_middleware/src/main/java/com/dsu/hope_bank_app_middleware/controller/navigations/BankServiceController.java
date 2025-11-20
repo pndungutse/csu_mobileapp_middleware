@@ -1,9 +1,9 @@
-package com.dsu.hope_bank_app_middleware.bank_services.controller;
+package com.dsu.hope_bank_app_middleware.controller.navigations;
 
-import com.dsu.hope_bank_app_middleware.bank_services.request.BankServiceRequest;
-import com.dsu.hope_bank_app_middleware.bank_services.response.BankServiceFullResponse;
-import com.dsu.hope_bank_app_middleware.bank_services.response.BankServiceResponse;
-import com.dsu.hope_bank_app_middleware.bank_services.service.BankServiceService;
+import com.dsu.hope_bank_app_middleware.request.navigations.BankServiceRequest;
+import com.dsu.hope_bank_app_middleware.response.navigations.BankServiceFullResponse;
+import com.dsu.hope_bank_app_middleware.response.navigations.BankServiceResponse;
+import com.dsu.hope_bank_app_middleware.service.BankServiceService;
 import com.dsu.hope_bank_app_middleware.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

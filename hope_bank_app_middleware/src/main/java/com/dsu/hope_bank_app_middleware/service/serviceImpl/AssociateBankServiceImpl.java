@@ -1,19 +1,18 @@
-package com.dsu.hope_bank_app_middleware.navigations.service.serviceImpl;
+package com.dsu.hope_bank_app_middleware.service.serviceImpl;
 
-import com.dsu.hope_bank_app_middleware.navigations.entity.AssociateBank;
-import com.dsu.hope_bank_app_middleware.general_enumerations.ResponseType;
+import com.dsu.hope_bank_app_middleware.entity.navigations.AssociateBank;
+import com.dsu.hope_bank_app_middleware.enumeration.ResponseType;
 import com.dsu.hope_bank_app_middleware.exception.ResourceNotFoundException;
 import com.dsu.hope_bank_app_middleware.exception.SuccessResponse;
-import com.dsu.hope_bank_app_middleware.navigations.repository.AssociateBankRepository;
-import com.dsu.hope_bank_app_middleware.navigations.repository.FormElementRepository;
-import com.dsu.hope_bank_app_middleware.navigations.repository.MainMenuRepository;
-import com.dsu.hope_bank_app_middleware.navigations.repository.SubMenuRepository;
+import com.dsu.hope_bank_app_middleware.repository.AssociateBankRepository;
+import com.dsu.hope_bank_app_middleware.repository.FormElementRepository;
+import com.dsu.hope_bank_app_middleware.repository.MainMenuRepository;
+import com.dsu.hope_bank_app_middleware.repository.SubMenuRepository;
 import com.dsu.hope_bank_app_middleware.request.navigations.AssociateBankRequest;
-import com.dsu.hope_bank_app_middleware.navigations.service.AssociateBankService;
+import com.dsu.hope_bank_app_middleware.service.AssociateBankService;
 import com.dsu.hope_bank_app_middleware.response.navigations.AssociateBankResponse;
 import com.dsu.hope_bank_app_middleware.response.navigations.NavigationsResponse;
 import com.dsu.hope_bank_app_middleware.utils.Mappings;
-import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +53,7 @@ public class AssociateBankServiceImpl implements AssociateBankService {
         associateBank.setAssociateBankAddedDate(new Date());
         AssociateBank savedAssociateBank = associateBankRepository.save(associateBank);
 
-        var successResponse = SuccessResponse.builder()
+        SuccessResponse successResponse = SuccessResponse.builder()
                 .type(ResponseType.success)
                 .description("AssociateBank created successfully")
                 .status(HttpStatus.OK)
@@ -71,7 +70,7 @@ public class AssociateBankServiceImpl implements AssociateBankService {
         AssociateBank associateBank = associateBankRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("AssociateBank not found"));
 
-        var successResponse = SuccessResponse.builder()
+        SuccessResponse successResponse = SuccessResponse.builder()
                 .type(ResponseType.success)
                 .description("AssociateBank retrieved successfully")
                 .status(HttpStatus.OK)
@@ -93,7 +92,7 @@ public class AssociateBankServiceImpl implements AssociateBankService {
                 .collect(Collectors.toList());
 
         // Create a success response object
-        var successResponse = SuccessResponse.builder()
+        SuccessResponse successResponse = SuccessResponse.builder()
                 .type(ResponseType.success)
                 .description("All AssociateBanks retrieved successfully")
                 .status(HttpStatus.OK)
@@ -118,13 +117,34 @@ public class AssociateBankServiceImpl implements AssociateBankService {
 
         AssociateBank updatedAssociateBank = associateBankRepository.save(associateBank);
 
-        var successResponse = SuccessResponse.builder()
+        SuccessResponse successResponse = SuccessResponse.builder()
                 .type(ResponseType.success)
                 .description("AssociateBank updated successfully")
                 .status(HttpStatus.OK)
                 .build();
 
         AssociateBankResponse associateBankResponse = mappings.mapToResponse(updatedAssociateBank);
+        associateBankResponse.setSuccessResponse(successResponse);
+
+        return new ResponseEntity<>(associateBankResponse, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<AssociateBankResponse> deleteAssociateBank(String id) {
+        AssociateBank associateBank = associateBankRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("AssociateBank not found with id: " + id));
+
+
+        // Delete the AssociateBank
+        associateBankRepository.delete(associateBank);
+
+        SuccessResponse successResponse = SuccessResponse.builder()
+                .type(ResponseType.success)
+                .description("AssociateBank deleted successfully")
+                .status(HttpStatus.OK)
+                .build();
+
+        AssociateBankResponse associateBankResponse = mappings.mapToResponse(associateBank);
         associateBankResponse.setSuccessResponse(successResponse);
 
         return new ResponseEntity<>(associateBankResponse, HttpStatus.OK);

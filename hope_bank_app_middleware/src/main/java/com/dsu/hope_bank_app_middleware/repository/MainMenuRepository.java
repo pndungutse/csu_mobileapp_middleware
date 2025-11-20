@@ -1,8 +1,6 @@
-package com.dsu.hope_bank_app_middleware.navigations.repository;
+package com.dsu.hope_bank_app_middleware.repository;
 
-import com.dsu.hope_bank_app_middleware.navigations.entity.MainMenu;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.dsu.hope_bank_app_middleware.entity.navigations.MainMenu;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

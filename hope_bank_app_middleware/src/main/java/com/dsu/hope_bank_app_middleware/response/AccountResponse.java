@@ -1,4 +1,4 @@
-package com.dsu.hope_bank_app_middleware.accounts.response;
+package com.dsu.hope_bank_app_middleware.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,8 +32,6 @@ public class AccountResponse {
         private String accountTitle;
         private String accountCurrency;
         private String accountStatus;
-
-
-        // Getters and Setters
+        private String retCode;
     }
 }

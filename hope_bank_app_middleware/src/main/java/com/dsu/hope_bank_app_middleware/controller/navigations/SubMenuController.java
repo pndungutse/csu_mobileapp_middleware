@@ -1,10 +1,8 @@
-package com.dsu.hope_bank_app_middleware.navigations.controller;
+package com.dsu.hope_bank_app_middleware.controller.navigations;
 
-import com.dsu.hope_bank_app_middleware.navigations.request.SubMenuRequest;
-import com.dsu.hope_bank_app_middleware.navigations.response.SubMenuFullResponse;
-import com.dsu.hope_bank_app_middleware.navigations.response.SubMenuResponse;
-import com.dsu.hope_bank_app_middleware.navigations.service.SubMenuService;
-import com.dsu.hope_bank_app_middleware.utils.AppConstants;
+import com.dsu.hope_bank_app_middleware.request.navigations.SubMenuRequest;
+import com.dsu.hope_bank_app_middleware.response.navigations.SubMenuResponse;
+import com.dsu.hope_bank_app_middleware.service.SubMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +11,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/navigation")
+@CrossOrigin(origins = "*")
 public class SubMenuController {
     @Autowired
     private SubMenuService subMenuService;
 
-    //    http://localhost:8080/api/v1/navigation/sub_menus   POST
-    @PostMapping("/sub_menus/{id}")
-    public ResponseEntity<SubMenuResponse> createSubMenu(@PathVariable String id, @RequestBody SubMenuRequest request) {
-        return subMenuService.createSubMenu(id, request);
+    //    http://localhost:8080/api/v1/navigation/sub_menus/{id}   POST
+    //    Note: Creates SubMenu and AssociateBankSubMenu relationship automatically
+    //    You can pass associate_bank_id in request body or use path parameter {id}
+    @PostMapping("/sub_menus")
+    public ResponseEntity<SubMenuResponse> createSubMenu(@RequestBody SubMenuRequest request) {
+        return subMenuService.createSubMenu(request);
     }
 
     //    http://localhost:8080/api/v1/navigation/sub_menus/{id}  GET
@@ -36,10 +37,21 @@ public class SubMenuController {
     }
 
     //    http://localhost:8080/api/v1/navigation/sub_menus_by_bank_id/{id} GET
-    @GetMapping("/sub_menus_by_main_menu_id/{id}")
+    @GetMapping("/sub_menus_by_associate_bank_id/{id}")
     public ResponseEntity<List<SubMenuResponse>> getAllSubMenusByBankId(
             @PathVariable String id
     ) {
-        return subMenuService.getAllSubMenusByMenuId(id);
+        return subMenuService.getAllSubMenusByBankId(id);
+    }
+
+    //    http://localhost:8080/api/v1/navigation/sub_menus_by_bank_id/{id} GET
+    @GetMapping("/sub_menus")
+    public ResponseEntity<List<SubMenuResponse>> getAllSubMenus() {
+        return subMenuService.getAllSubMenus();
+    }
+
+    @DeleteMapping("/sub_menus/{id}")
+    public ResponseEntity<SubMenuResponse> deleteSubmenu(@PathVariable String id) {
+        return subMenuService.deleteSubmenu(id);
     }
 }

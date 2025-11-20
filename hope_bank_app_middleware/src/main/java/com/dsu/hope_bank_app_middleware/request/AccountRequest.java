@@ -1,4 +1,4 @@
-package com.dsu.hope_bank_app_middleware.accounts.request;
+package com.dsu.hope_bank_app_middleware.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

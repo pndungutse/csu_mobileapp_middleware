@@ -1,6 +1,6 @@
-package com.dsu.hope_bank_app_middleware.navigations.entity;
+package com.dsu.hope_bank_app_middleware.entity.navigations;
 
-import com.dsu.hope_bank_app_middleware.general_enumerations.Status;
+import com.dsu.hope_bank_app_middleware.enumeration.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +23,7 @@ public class MainMenu {
     private String menuItemDesc;
     private Status menuItemStatus;
     private String icon;
+
     private Date menuItemAddedDate;
     private Date menuItemUpdatedDate;
 

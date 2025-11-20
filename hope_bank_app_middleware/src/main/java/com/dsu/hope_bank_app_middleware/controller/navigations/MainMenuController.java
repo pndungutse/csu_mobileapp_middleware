@@ -1,10 +1,9 @@
-package com.dsu.hope_bank_app_middleware.navigations.controller;
+package com.dsu.hope_bank_app_middleware.controller.navigations;
 
-import com.dsu.hope_bank_app_middleware.navigations.request.MainMenuRequest;
-import com.dsu.hope_bank_app_middleware.navigations.response.MainMenuFullResponse;
-import com.dsu.hope_bank_app_middleware.navigations.response.MainMenuResponse;
-import com.dsu.hope_bank_app_middleware.navigations.service.MainMenuService;
-import com.dsu.hope_bank_app_middleware.utils.AppConstants;
+import com.dsu.hope_bank_app_middleware.request.navigations.MainMenuRequest;
+import com.dsu.hope_bank_app_middleware.response.navigations.MainMenuAllResponse;
+import com.dsu.hope_bank_app_middleware.response.navigations.MainMenuResponse;
+import com.dsu.hope_bank_app_middleware.service.MainMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/navigation")
+@CrossOrigin(origins = "*")
 public class MainMenuController {
     @Autowired
     private MainMenuService mainMenuService;
@@ -21,6 +21,12 @@ public class MainMenuController {
     @PostMapping("/main_menus")
     public ResponseEntity<MainMenuResponse> createMainMenu(@RequestBody MainMenuRequest request) {
         return mainMenuService.createMainMenu(request);
+    }
+
+    //    http://localhost:8080/api/v1/navigation/main_menus  GET
+    @GetMapping("/main_menus")
+    public ResponseEntity<List<MainMenuAllResponse>> getAllMainMenus() {
+        return mainMenuService.getAllMainMenus();
     }
 
     //    http://localhost:8080/api/v1/navigation/main_menus/{id}  GET

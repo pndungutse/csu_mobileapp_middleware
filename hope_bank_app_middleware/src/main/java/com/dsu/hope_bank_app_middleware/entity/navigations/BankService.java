@@ -1,4 +1,4 @@
-package com.dsu.hope_bank_app_middleware.bank_services.entity;
+package com.dsu.hope_bank_app_middleware.entity.navigations;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

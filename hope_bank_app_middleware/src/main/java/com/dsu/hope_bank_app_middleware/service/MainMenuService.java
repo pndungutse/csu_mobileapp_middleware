@@ -1,6 +1,7 @@
-package com.dsu.hope_bank_app_middleware.navigations.service;
+package com.dsu.hope_bank_app_middleware.service;
 
 import com.dsu.hope_bank_app_middleware.request.navigations.MainMenuRequest;
+import com.dsu.hope_bank_app_middleware.response.navigations.MainMenuAllResponse;
 import com.dsu.hope_bank_app_middleware.response.navigations.MainMenuResponse;
 import org.springframework.http.ResponseEntity;
 
@@ -13,4 +14,6 @@ public interface MainMenuService {
     ResponseEntity<List<MainMenuResponse>> getAllMainMenusByBankId(String associatedBankId);
     ResponseEntity<MainMenuResponse> updateMainMenu(String id, MainMenuRequest request);
     ResponseEntity<MainMenuResponse> deleteMainMenu(String id);
+
+    ResponseEntity<List<MainMenuAllResponse>> getAllMainMenus();
 }

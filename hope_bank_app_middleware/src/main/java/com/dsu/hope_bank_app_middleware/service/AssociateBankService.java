@@ -1,4 +1,4 @@
-package com.dsu.hope_bank_app_middleware.navigations.service;
+package com.dsu.hope_bank_app_middleware.service;
 
 import com.dsu.hope_bank_app_middleware.request.navigations.AssociateBankRequest;
 import com.dsu.hope_bank_app_middleware.response.navigations.AssociateBankResponse;
@@ -12,6 +12,7 @@ public interface AssociateBankService {
     ResponseEntity<AssociateBankResponse> getAssociateBankById(String id);
     ResponseEntity<List<AssociateBankResponse>> getAllAssociateBanks();
     ResponseEntity<AssociateBankResponse> updateAssociateBank(String id, AssociateBankRequest request);
+    ResponseEntity<AssociateBankResponse> deleteAssociateBank(String id);
 
     ResponseEntity<NavigationsResponse> getAllNavigationResponse(String bankId);
 }

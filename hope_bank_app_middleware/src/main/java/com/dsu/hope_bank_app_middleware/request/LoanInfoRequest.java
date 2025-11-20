@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoanBalanceRequest {
+public class LoanInfoRequest {
     @JsonProperty("loan")
     private String loan;
 }

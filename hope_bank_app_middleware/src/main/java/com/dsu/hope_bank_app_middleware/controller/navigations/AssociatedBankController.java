@@ -1,11 +1,9 @@
-package com.dsu.hope_bank_app_middleware.navigations.controller;
+package com.dsu.hope_bank_app_middleware.controller.navigations;
 
-import com.dsu.hope_bank_app_middleware.navigations.request.AssociateBankRequest;
-import com.dsu.hope_bank_app_middleware.navigations.response.AssociateBankFullResponse;
-import com.dsu.hope_bank_app_middleware.navigations.response.AssociateBankResponse;
-import com.dsu.hope_bank_app_middleware.navigations.response.NavigationsResponse;
-import com.dsu.hope_bank_app_middleware.navigations.service.AssociateBankService;
-import com.dsu.hope_bank_app_middleware.utils.AppConstants;
+import com.dsu.hope_bank_app_middleware.request.navigations.AssociateBankRequest;
+import com.dsu.hope_bank_app_middleware.response.navigations.AssociateBankResponse;
+import com.dsu.hope_bank_app_middleware.response.navigations.NavigationsResponse;
+import com.dsu.hope_bank_app_middleware.service.AssociateBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/navigation")
+@CrossOrigin(origins = "*")
 public class AssociatedBankController {
 
     @Autowired
@@ -35,6 +34,12 @@ public class AssociatedBankController {
     @PutMapping("/associated_banks/{id}")
     public ResponseEntity<AssociateBankResponse> updateAssociateBank(@PathVariable String id, @RequestBody AssociateBankRequest request) {
         return associateBankService.updateAssociateBank(id, request);
+    }
+
+    //    http://localhost:8080/api/v1/navigation/associated_banks/{id} DELETE
+    @DeleteMapping("/associated_banks/{id}")
+    public ResponseEntity<AssociateBankResponse> deleteAssociateBank(@PathVariable String id) {
+        return associateBankService.deleteAssociateBank(id);
     }
 
     //    http://localhost:8080/api/v1/navigation/associated_banks  GET

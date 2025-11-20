@@ -1,14 +1,14 @@
-package com.dsu.hope_bank_app_middleware.bank_services.service.serviceImpl;
+package com.dsu.hope_bank_app_middleware.service.serviceImpl;
 
-import com.dsu.hope_bank_app_middleware.bank_services.entity.BankService;
-import com.dsu.hope_bank_app_middleware.general_enumerations.ResponseType;
+import com.dsu.hope_bank_app_middleware.entity.navigations.BankService;
+import com.dsu.hope_bank_app_middleware.enumeration.ResponseType;
 import com.dsu.hope_bank_app_middleware.exception.ResourceNotFoundException;
 import com.dsu.hope_bank_app_middleware.exception.SuccessResponse;
-import com.dsu.hope_bank_app_middleware.bank_services.repository.BankServiceRepository;
-import com.dsu.hope_bank_app_middleware.bank_services.request.BankServiceRequest;
-import com.dsu.hope_bank_app_middleware.bank_services.response.BankServiceFullResponse;
-import com.dsu.hope_bank_app_middleware.bank_services.response.BankServiceResponse;
-import com.dsu.hope_bank_app_middleware.bank_services.service.BankServiceService;
+import com.dsu.hope_bank_app_middleware.repository.BankServiceRepository;
+import com.dsu.hope_bank_app_middleware.request.navigations.BankServiceRequest;
+import com.dsu.hope_bank_app_middleware.response.navigations.BankServiceFullResponse;
+import com.dsu.hope_bank_app_middleware.response.navigations.BankServiceResponse;
+import com.dsu.hope_bank_app_middleware.service.BankServiceService;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

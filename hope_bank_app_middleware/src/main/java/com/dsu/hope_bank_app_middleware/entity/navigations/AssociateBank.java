@@ -1,6 +1,6 @@
-package com.dsu.hope_bank_app_middleware.navigations.entity;
+package com.dsu.hope_bank_app_middleware.entity.navigations;
 
-import com.dsu.hope_bank_app_middleware.general_enumerations.Status;
+import com.dsu.hope_bank_app_middleware.enumeration.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +22,5 @@ public class AssociateBank {
     private Status associateBankStatus;
     private Date associateBankAddedDate;
     private Date associateBankUpdatedDate;
+    // SubMenus are accessed through AssociateBankSubMenu relationship
 }
