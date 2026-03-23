@@ -46,12 +46,10 @@ public class AccountServiceImpl implements AccountService {
         // Map AccountRequest to AccountDTO
         AccountDTO accountDTO = mapToAccountDTO(accountRequest);
         System.out.println("AccountDTO: "+accountDTO);
-
-
+//        accountDTO.getParameters().setCustomerId(accountRequest.getCustomerId());
+        accountDTO.getParameters().setTxnType("AccountInformation");
 
         // Call the T24 endpoint
-        String t24EndpointUrl = "https://10.2.1.6:9095/dsuwebservices/dsu/t24/transaction";
-
         String t24_base_url = dsuMobApp.getT24_base_url();
 
         HttpHeaders headers = new HttpHeaders();
@@ -152,7 +150,7 @@ public class AccountServiceImpl implements AccountService {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<MiniStatementResponse> response = restTemplate.postForEntity(t24BaseUrl, entity, MiniStatementResponse.class);
-
+        logger.log(Level.INFO, "Response: {0}", response);
 //        List<MiniStatementResponse.Transaction> transactions = response.getBody().getResponseMessage().getResult().getTxn();
         assert response.getBody() != null;
         logger.log(Level.INFO, "Response: {0}", response.getBody().getResponseMessage().getResult().getTxn());

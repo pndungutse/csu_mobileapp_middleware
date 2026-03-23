@@ -15,7 +15,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/accounts")
-@Tag(name = "Account Management", description = "APIs for account operations")
+@Tag(name = "Account Management", description = "APIs for account operations")     
 public class AccountController {
 
     private final AccountService accountService;
@@ -62,6 +62,13 @@ public class AccountController {
         List<GenericResponse> response = accountService.getCurrencyList();
         return ResponseEntity.ok(response);
     }
+
+//    @PostMapping("/list_non_loan_accounts")
+//    public ResponseEntity<List<GenericResponse>> getNonLoanAccountList() {
+//        List<GenericResponse> response = accountService.getNonLoanAccountList();
+//        return ResponseEntity.ok(response);
+//    }
+
 
 
 }

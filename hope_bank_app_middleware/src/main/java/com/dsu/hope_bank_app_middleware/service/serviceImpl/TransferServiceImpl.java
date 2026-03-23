@@ -3,6 +3,7 @@ package com.dsu.hope_bank_app_middleware.service.serviceImpl;
 import com.dsu.hope_bank_app_middleware.config.DsuMobApp;
 import com.dsu.hope_bank_app_middleware.config.SSLUtil;
 import com.dsu.hope_bank_app_middleware.request.*;
+import com.dsu.hope_bank_app_middleware.response.AccountBalanceResponse;
 import com.dsu.hope_bank_app_middleware.response.TransferResponse;
 import com.dsu.hope_bank_app_middleware.service.TransferService;
 import com.fasterxml.uuid.Generators;
@@ -37,8 +38,39 @@ public class TransferServiceImpl implements TransferService {
     @Autowired
     private DsuMobApp dsuMobApp;
 
+    @Autowired
+    private AccountServiceImpl accountServiceImpl;
+
     @Override
     public TransferResponse.Result processInternalTransfer(InternalTransferRequest request) {
+        AccountBalanceRequest accountBalanceRequest = new AccountBalanceRequest();
+        accountBalanceRequest.setAccount(request.getCustomerAccount());
+        AccountBalanceResponse.Result balanceResult = accountServiceImpl.getAccountBalance(accountBalanceRequest);
+        
+        // Parse amounts for comparison
+        double transferAmount;
+        double availableBalance;
+        try {
+            transferAmount = Double.parseDouble(request.getAmount());
+            availableBalance = Double.parseDouble(balanceResult.getAvailable_balance());
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Error parsing amount or balance: {0}", e.getMessage());
+            TransferResponse.Result errorResult = new TransferResponse.Result();
+            errorResult.setRet_code("400");
+            errorResult.setRet_message("Invalid amount or balance format");
+            return errorResult;
+        }
+        
+        // Check if transfer amount exceeds available balance
+        if (transferAmount > availableBalance) {
+            logger.log(Level.WARNING, "Insufficient balance. Available: {0}, Requested: {1}", 
+                new Object[]{availableBalance, transferAmount});
+            TransferResponse.Result errorResult = new TransferResponse.Result();
+            errorResult.setRet_code("400");
+            errorResult.setRet_message("Insufficient balance. Available balance: " + availableBalance);
+
+            return errorResult;
+        }
         String t24BaseUrl = dsuMobApp.getT24_base_url();
         logger.log(Level.INFO, "T24 base Url: {0}", t24BaseUrl);
         logger.log(Level.INFO, "Account Info request: {0}", request);
@@ -80,7 +112,7 @@ public class TransferServiceImpl implements TransferService {
         logger.log(Level.INFO, "Response: {0}", response);
 
 //        TransferResponse.Result transferResponseResult = response.getBody().getResponseMessage().getResult();
-
+        
         assert response.getBody() != null;
         return response.getBody().getResponseMessage().getResult();
     }

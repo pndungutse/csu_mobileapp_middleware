@@ -14,4 +14,6 @@ public interface AccountService {
     GenericResponse getSingleAccountInformation(GenericRequest genericRequest);
 
     List<GenericResponse> getCurrencyList();
+
+//    List<GenericResponse> getNonLoanAccountList();
 }

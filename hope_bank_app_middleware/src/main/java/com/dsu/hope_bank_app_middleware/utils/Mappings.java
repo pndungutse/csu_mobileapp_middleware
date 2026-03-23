@@ -1,8 +1,10 @@
 package com.dsu.hope_bank_app_middleware.utils;
 
+import com.dsu.hope_bank_app_middleware.entity.BeneficiaryBank;
 import com.dsu.hope_bank_app_middleware.entity.navigations.*;
 import com.dsu.hope_bank_app_middleware.enumeration.Status;
 import com.dsu.hope_bank_app_middleware.repository.*;
+import com.dsu.hope_bank_app_middleware.response.BeneficiaryBankResponse;
 import com.dsu.hope_bank_app_middleware.response.navigations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -120,6 +122,14 @@ public class Mappings {
                 .associateBankStatus(associateBank.getAssociateBankStatus())
                 .associateBankAddedDate(associateBank.getAssociateBankAddedDate())
                 .associateBankUpdatedDate(associateBank.getAssociateBankUpdatedDate())
+                .build();
+    }
+
+    public BeneficiaryBankResponse mapToBeneficiaryBankResponse(BeneficiaryBank beneficiaryBank) {
+
+        return BeneficiaryBankResponse.builder()
+                .beneficiaryCode(beneficiaryBank.getBeneficiaryCode())
+                .beneficiaryName(beneficiaryBank.getBeneficiaryName())
                 .build();
     }
 
