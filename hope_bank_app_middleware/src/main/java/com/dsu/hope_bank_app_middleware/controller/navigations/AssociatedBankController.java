@@ -6,6 +6,7 @@ import com.dsu.hope_bank_app_middleware.response.navigations.NavigationsResponse
 import com.dsu.hope_bank_app_middleware.service.AssociateBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class AssociatedBankController {
     private AssociateBankService associateBankService;
 
     //    http://localhost:8080/api/v1/navigation/associated_banks  POST
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/associated_banks")
     public ResponseEntity<AssociateBankResponse> createAssociateBank(@RequestBody AssociateBankRequest request) {
         return associateBankService.createAssociateBank(request);
@@ -37,6 +39,7 @@ public class AssociatedBankController {
     }
 
     //    http://localhost:8080/api/v1/navigation/associated_banks/{id} DELETE
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/associated_banks/{id}")
     public ResponseEntity<AssociateBankResponse> deleteAssociateBank(@PathVariable String id) {
         return associateBankService.deleteAssociateBank(id);
