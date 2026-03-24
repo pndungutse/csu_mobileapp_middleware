@@ -69,13 +69,22 @@ public class JwtTokenProvider {
         return username;
     }
 
+    public Date getExpirationDate(String token){
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getExpiration();
+    }
+
     // validate Jwt token
     public boolean validateToken(String token){
         try{
             Jwts.parserBuilder()
                     .setSigningKey(key())
                     .build()
-                    .parse(token);
+                    .parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException ex) {
             throw new CustomAPIException(HttpStatus.BAD_REQUEST, "Invalid JWT token");

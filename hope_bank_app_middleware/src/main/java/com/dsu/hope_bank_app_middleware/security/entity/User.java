@@ -26,6 +26,7 @@ public class User {
     @Indexed(unique = true)
     private String email;
     private String password;
+    private boolean mustChangePassword;
     @DBRef(lazy = false)
     private Set<Role> roles;
 

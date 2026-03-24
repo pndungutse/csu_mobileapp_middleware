@@ -8,6 +8,7 @@ import com.dsu.hope_bank_app_middleware.response.navigations.AssociateBankRespon
 import com.dsu.hope_bank_app_middleware.service.BeneficiaryBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class BeneficiaryBankController {
         return beneficiaryBankService.createBeneficiaryBank(request);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/list_beneficiary")
     public ResponseEntity<List<GenericResponse>> getBeneficiaryList() {
         List<GenericResponse> response = beneficiaryBankService.getBeneficiaryList();

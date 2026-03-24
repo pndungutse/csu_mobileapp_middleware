@@ -1,5 +1,7 @@
 package com.dsu.hope_bank_app_middleware.security;
 
+import com.dsu.hope_bank_app_middleware.security.entity.User;
+import com.dsu.hope_bank_app_middleware.security.repository.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,9 +24,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
+    private UserRepository userRepository;
+    private TokenBlacklistService tokenBlacklistService;
+
+    public JwtAuthenticationFilter(
+            JwtTokenProvider jwtTokenProvider,
+            UserDetailsService userDetailsService,
+            UserRepository userRepository,
+            TokenBlacklistService tokenBlacklistService
+    ) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     @Override
@@ -34,9 +46,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // validate token
         if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
+            if (tokenBlacklistService.isBlacklisted(token)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"message\":\"Token is invalidated. Please login again.\"}");
+                return;
+            }
 
             // get username from token
             String username = jwtTokenProvider.getUsername(token);
+            User user = userRepository.findByUsername(username).orElse(null);
+
+            // Block access to non-auth resources until the user changes the initial password.
+            if (user != null && user.isMustChangePassword() && !isPasswordChangeAllowedPath(request.getRequestURI())) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"message\":\"Password change required before accessing this resource\"}");
+                return;
+            }
 
             // load the user associated with token
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -65,6 +92,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         return null;
+    }
+
+    private boolean isPasswordChangeAllowedPath(String path) {
+        return "/api/auth/login".equals(path)
+                || "/api/auth/register".equals(path)
+                || "/api/auth/change-password".equals(path);
     }
 
 

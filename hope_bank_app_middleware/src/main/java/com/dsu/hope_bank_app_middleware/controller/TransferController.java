@@ -9,6 +9,7 @@ import com.dsu.hope_bank_app_middleware.response.TransferResponse;
 import com.dsu.hope_bank_app_middleware.service.TransferService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -18,18 +19,21 @@ import org.springframework.web.bind.annotation.*;
 public class TransferController {
     private final TransferService transferService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/internal_transfer")
     public ResponseEntity<TransferResponse.Result> processInternalTransfer(@RequestBody InternalTransferRequest internalTransferRequest) {
         TransferResponse.Result response = transferService.processInternalTransfer(internalTransferRequest);
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/bank_to_wallet_transfer")
     public ResponseEntity<TransferResponse.Result> processBankToWalletTransfer(@RequestBody BankToWalletTransferRequest bankToWalletTransferRequest) {
         TransferResponse.Result response = transferService.processBankToWalletTransfer(bankToWalletTransferRequest);
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/airtime_top_up")
     public ResponseEntity<TransferResponse.Result> processBAirtimeTopUp(@RequestBody AirtimeTopUpRequest airtimeTopUpRequest) {
         TransferResponse.Result response = transferService.processBAirtimeTopUp(airtimeTopUpRequest);
