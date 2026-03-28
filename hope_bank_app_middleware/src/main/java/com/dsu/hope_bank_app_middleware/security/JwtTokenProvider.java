@@ -43,6 +43,7 @@ public class JwtTokenProvider {
                 .claim("first_name", user.getFirst_name())
                 .claim("last_name", user.getLast_name())
                 .claim("customer_number", user.getCustomer_number())
+                .claim("mustChangePassword", user.isMustChangePassword())
                 .claim("env", user.getEnv())
                 .claim("email", user.getEmail())
                 .setIssuedAt(new Date())

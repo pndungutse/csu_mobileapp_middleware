@@ -45,9 +45,9 @@ public class AccountServiceImpl implements AccountService {
         System.out.println("Account request: "+accountRequest);
         // Map AccountRequest to AccountDTO
         AccountDTO accountDTO = mapToAccountDTO(accountRequest);
-        System.out.println("AccountDTO: "+accountDTO);
-//        accountDTO.getParameters().setCustomerId(accountRequest.getCustomerId());
-        accountDTO.getParameters().setTxnType("AccountInformation");
+//        System.out.println("AccountDTO: "+accountDTO);
+        accountDTO.getParameters().setCustomerId(accountRequest.getCustomerId());
+//        accountDTO.getParameters().setTxnType("AccountInformation");
 
         // Call the T24 endpoint
         String t24_base_url = dsuMobApp.getT24_base_url();
