@@ -10,8 +10,10 @@ import com.dsu.hope_bank_app_middleware.request.ipsRequest.IPSTransferRequest;
 import com.dsu.hope_bank_app_middleware.request.ipsRequest.IpsNameLookupRequest;
 import com.dsu.hope_bank_app_middleware.response.AccountBalanceResponse;
 import com.dsu.hope_bank_app_middleware.response.AccountResponse;
+import com.dsu.hope_bank_app_middleware.response.GenericDataResponse;
 import com.dsu.hope_bank_app_middleware.response.GenericResponse;
 import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsNameLookupResponse;
+import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsQrReadResponse;
 import com.dsu.hope_bank_app_middleware.response.TransferResponse;
 import com.dsu.hope_bank_app_middleware.service.IPSPaymentsService;
 import com.fasterxml.uuid.Generators;
@@ -128,7 +130,9 @@ public class IPSPaymentsServiceImpl implements IPSPaymentsService {
         AccountResponse accountResponse = accountService.getAccountInformation(accountRequest);
         logger.log(Level.INFO, "Account Response: {0}", accountResponse);
 
-        GenericRequest genericRequest = new GenericRequest(ipsTransferRequest.getPhone_number());
+        GenericRequest genericRequest = GenericRequest.builder()
+                .requestId(ipsTransferRequest.getPhone_number())
+                .build();
         GenericResponse genericResponse = getIpsAccountInformation(genericRequest);
 
         logger.log(Level.INFO, "Generic Request: {0}", genericRequest);
@@ -221,8 +225,9 @@ public class IPSPaymentsServiceImpl implements IPSPaymentsService {
         AccountResponse accountResponse = accountService.getAccountInformation(accountRequest);
         logger.log(Level.INFO, "Account Response: {0}", accountResponse);
 
-        GenericRequest genericRequest = new GenericRequest(ipsPayQrRequest.getQr_reference());
-//        GenericRequest genericRequest = new GenericRequest("25768919242");
+        GenericRequest genericRequest = GenericRequest.builder()
+                .requestId(ipsPayQrRequest.getQr_reference())
+                .build();
         GenericResponse genericResponse = getIpsAccountInformation(genericRequest);
 
         logger.log(Level.INFO, "Generic Request: {0}", genericRequest);
@@ -275,7 +280,6 @@ public class IPSPaymentsServiceImpl implements IPSPaymentsService {
     @Override
     public GenericResponse getIpsQrInformation(GenericRequest genericRequest) {
         logger.log(Level.SEVERE, "Request for getting ips qr info: {0}", genericRequest);
-        genericRequest.setRequestId("25768919242");
         String url = dsuMobApp.getIps_name_lookup_url();
         if (url == null || url.isEmpty()) {
             return null;
@@ -312,6 +316,48 @@ public class IPSPaymentsServiceImpl implements IPSPaymentsService {
             // log e and return empty or rethrow as needed
             return null;
         }
+    }
+
+    @Override
+    public GenericDataResponse<IpsQrReadResponse> getIpsQrCodeInfo(GenericRequest genericRequest) {
+        logger.log(Level.INFO, "Request for IPS QR read (dummy): {0}", genericRequest);
+
+        String qrUrl = genericRequest != null && genericRequest.getRequestId() != null
+                ? genericRequest.getRequestId().trim()
+                : null;
+        if (qrUrl == null || qrUrl.isEmpty()) {
+            return GenericDataResponse.<IpsQrReadResponse>builder()
+                    .retCode("400")
+                    .message("request_id (QR URL) is required")
+                    .data(null)
+                    .build();
+        }
+
+        IpsQrReadResponse.QrLookup qrLookup = new IpsQrReadResponse.QrLookup();
+        qrLookup.setStatusCode(200);
+        qrLookup.setBody("{\"header\":{\"qrType\":\"STAT\",\"amountType\":\"Fixed\"}}");
+        qrLookup.setContentType("application/json");
+        qrLookup.setRequestId("00000000-0000-0000-0000-000000000000");
+        qrLookup.setUrl("https://example.com/dummy-qr-lookup");
+
+        IpsQrReadResponse dummy = new IpsQrReadResponse();
+        dummy.setQrCodeUrl(qrUrl);
+        dummy.setExtractedUuid("423a9db5-7518-4477-bab8-349f4dd1e8a7");
+        dummy.setUetr("491d0dde-9d91-4dcd-b071-ee4651d7d4aa");
+        dummy.setCreditorName("Dummy Creditor");
+        dummy.setCreditorAccount("60660");
+        dummy.setE2e("T20260327081513732248093");
+        dummy.setAmountType("Fixed");
+        dummy.setSum("1005");
+        dummy.setCurrency("BIF");
+        dummy.setXmlCreditorBic("<BICFI>BCBUBIBI</BICFI>");
+        dummy.setQrLookup(qrLookup);
+
+        return GenericDataResponse.<IpsQrReadResponse>builder()
+                .retCode("00")
+                .message("OK (dummy data — replace with gateway call when ready)")
+                .data(dummy)
+                .build();
     }
 
     private GenericResponse mapToGenericResponse(IpsNameLookupResponse ipsNameLookupResponse, GenericRequest genericRequest) {

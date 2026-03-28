@@ -3,7 +3,9 @@ package com.dsu.hope_bank_app_middleware.controller;
 import com.dsu.hope_bank_app_middleware.request.GenericRequest;
 import com.dsu.hope_bank_app_middleware.request.ipsRequest.IPSPayQrRequest;
 import com.dsu.hope_bank_app_middleware.request.ipsRequest.IPSTransferRequest;
+import com.dsu.hope_bank_app_middleware.response.GenericDataResponse;
 import com.dsu.hope_bank_app_middleware.response.GenericResponse;
+import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsQrReadResponse;
 import com.dsu.hope_bank_app_middleware.response.TransferResponse;
 import com.dsu.hope_bank_app_middleware.service.IPSPaymentsService;
 import lombok.AllArgsConstructor;
@@ -42,6 +44,12 @@ public class IPSPaymentsController {
     @PostMapping("/single_qr_information")
     public ResponseEntity<GenericResponse> getIpsQrInformation(@RequestBody GenericRequest genericRequest) {
         GenericResponse response = ipsPaymentsService.getIpsQrInformation(genericRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/qr_code_information")
+    public ResponseEntity<GenericDataResponse<IpsQrReadResponse>> getIpsQrCodeInfo(@RequestBody GenericRequest genericRequest) {
+        GenericDataResponse<IpsQrReadResponse> response = ipsPaymentsService.getIpsQrCodeInfo(genericRequest);
         return ResponseEntity.ok(response);
     }
 }
