@@ -197,7 +197,6 @@ public class IPSPaymentsServiceImpl implements IPSPaymentsService {
     @Override
     public TransferResponse.Result processTransferIpsPayQr(IPSPayQrRequest ipsPayQrRequest) {
 
-
         ipsPayQrRequest.setQr_reference(ipsPayQrRequest.getQr_reference());
         logger.log(Level.INFO, "Full request from endpoint of IPS PAY QR {0}", ipsPayQrRequest);
         AccountBalanceRequest accountBalanceRequest = new AccountBalanceRequest();
@@ -312,6 +311,7 @@ public class IPSPaymentsServiceImpl implements IPSPaymentsService {
                 genericDataResponse.getData().getCreditorName(),
                 genericDataResponse.getData().getCreditorAccount(),
                 genericDataResponse.getData().getUetr(),
+                "",
                 uniqueRef,
                 dsuMobApp.getBank_ips_pay_qr()
         );

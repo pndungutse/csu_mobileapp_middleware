@@ -16,6 +16,7 @@ public class IPSPayQrRequest {
     private String member_name;
     private String member_account;
     private String qr_reference; //from client
+    private String document_token;
     private String unique_txn_ref;
     private String txn_type;
 }
