@@ -19,16 +19,20 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 public class FormElementServiceImpl implements FormElementService {
+
+    private static final Logger logger = Logger.getLogger(FormElementServiceImpl.class.getName());
 
     @Autowired
     private SubMenuRepository subMenuRepository;
 
     @Autowired
     private FormElementRepository formElementRepository;
+
 
     @Override
     public ResponseEntity<FormElementResponse> createFormElement(String subMenuId, FormElementRequest request) {
@@ -49,6 +53,13 @@ public class FormElementServiceImpl implements FormElementService {
         formElement.setFormElementNoInputField(request.getFormElementNoInputField());
         formElement.setFormElementFetchInfoUrl(request.getFormElementFetchInfoUrl());
         formElement.setFormElementDefaultValue(request.getFormElementDefaultValue());
+        formElement.setFormElementPopulateInfo(request.getFormElementPopulateInfo());
+        formElement.setFormElementAutofill(request.getFormElementAutofill());
+        formElement.setFormElementAutofillFieldName(request.getFormElementAutofillFieldName());
+        formElement.setFormElementAutofillParentFieldName(request.getFormElementAutofillParentFieldName());
+        formElement.setFormElementChangeReadOnlyFieldName(request.getFormElementChangeReadOnlyFieldName());
+        formElement.setFormElementChangeReadOnlyFieldValue(request.getFormElementChangeReadOnlyFieldValue());
+
         formElement.setFormElementAddedDate(new Date());
         formElement.setSubMenu(subMenu);
 
@@ -130,6 +141,12 @@ public class FormElementServiceImpl implements FormElementService {
         formElement.setFormElementNoInputField(request.getFormElementNoInputField());
         formElement.setFormElementFetchInfoUrl(request.getFormElementFetchInfoUrl());
         formElement.setFormElementDefaultValue(request.getFormElementDefaultValue());
+        formElement.setFormElementPopulateInfo(request.getFormElementPopulateInfo());
+        formElement.setFormElementAutofill(request.getFormElementAutofill());
+        formElement.setFormElementAutofillFieldName(request.getFormElementAutofillFieldName());
+        formElement.setFormElementAutofillParentFieldName(request.getFormElementAutofillParentFieldName());
+        formElement.setFormElementChangeReadOnlyFieldName(request.getFormElementChangeReadOnlyFieldName());
+        formElement.setFormElementChangeReadOnlyFieldValue(request.getFormElementChangeReadOnlyFieldValue());
 
         formElement.setFormElementUpdatedDate(new Date());
 
@@ -181,6 +198,12 @@ public class FormElementServiceImpl implements FormElementService {
                 .formElementNoInputField(formElement.getFormElementNoInputField())
                 .formElementFetchInfoUrl(formElement.getFormElementFetchInfoUrl())
                 .formElementDefaultValue(formElement.getFormElementDefaultValue())
+                .formElementPopulateInfo(formElement.getFormElementPopulateInfo())
+                .formElementAutofill(formElement.getFormElementAutofill())
+                .formElementAutofillFieldName(formElement.getFormElementAutofillFieldName())
+                .formElementAutofillParentFieldName(formElement.getFormElementAutofillParentFieldName())
+                .formElementChangeReadOnlyFieldName(formElement.getFormElementChangeReadOnlyFieldName())
+                .formElementChangeReadOnlyFieldValue(formElement.getFormElementChangeReadOnlyFieldValue())
                 .formElementAddedDate(formElement.getFormElementAddedDate())
                 .formElementUpdatedDate(formElement.getFormElementUpdatedDate())
                 .subMenuItemName(
