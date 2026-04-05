@@ -1,6 +1,8 @@
 package com.dsu.hope_bank_app_middleware.security;
 
+import com.dsu.hope_bank_app_middleware.security.entity.StoredAccessToken;
 import com.dsu.hope_bank_app_middleware.security.entity.User;
+import com.dsu.hope_bank_app_middleware.security.repository.StoredAccessTokenRepository;
 import com.dsu.hope_bank_app_middleware.security.repository.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -26,17 +29,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private UserRepository userRepository;
     private TokenBlacklistService tokenBlacklistService;
+    private StoredAccessTokenRepository storedAccessTokenRepository;
 
     public JwtAuthenticationFilter(
             JwtTokenProvider jwtTokenProvider,
             UserDetailsService userDetailsService,
             UserRepository userRepository,
-            TokenBlacklistService tokenBlacklistService
+            TokenBlacklistService tokenBlacklistService,
+            StoredAccessTokenRepository storedAccessTokenRepository
     ) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
         this.tokenBlacklistService = tokenBlacklistService;
+        this.storedAccessTokenRepository = storedAccessTokenRepository;
     }
 
     @Override
@@ -50,6 +56,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
                 response.getWriter().write("{\"message\":\"Token is invalidated. Please login again.\"}");
+                return;
+            }
+
+            Optional<StoredAccessToken> stored = storedAccessTokenRepository.findByToken(token);
+            if (stored.isPresent() && stored.get().isRevoked()) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"message\":\"Token is revoked. Please login again.\"}");
                 return;
             }
 
@@ -87,8 +101,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String bearerToken = request.getHeader("Authorization");
 
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
-            return bearerToken.substring(7, bearerToken.length());
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7).trim();
         }
 
         return null;
@@ -97,7 +111,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean isPasswordChangeAllowedPath(String path) {
         return "/api/auth/login".equals(path)
                 || "/api/auth/register".equals(path)
-                || "/api/auth/change-password".equals(path);
+                || "/api/auth/refresh".equals(path)
+                || "/api/auth/change-password".equals(path)
+                || "/api/auth/logout".equals(path);
     }
 
 

@@ -2,6 +2,8 @@ package com.dsu.hope_bank_app_middleware.security.controller;
 
 import com.dsu.hope_bank_app_middleware.security.request.ChangePasswordRequest;
 import com.dsu.hope_bank_app_middleware.security.request.LoginRequest;
+import com.dsu.hope_bank_app_middleware.security.request.LogoutRequest;
+import com.dsu.hope_bank_app_middleware.security.request.RefreshTokenRequest;
 import com.dsu.hope_bank_app_middleware.security.request.RegisterRequest;
 import com.dsu.hope_bank_app_middleware.security.response.JWTAuthResponse;
 import com.dsu.hope_bank_app_middleware.security.service.AuthService;
@@ -29,6 +31,11 @@ public class AuthController {
         return ResponseEntity.ok(jwtAuthResponse);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<JWTAuthResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.ok(authService.refreshAccessToken(refreshTokenRequest));
+    }
+
     //    Build register rest api
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest){
@@ -43,8 +50,9 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader){
-        String response = authService.logout(authorizationHeader);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<String> logout(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody(required = false) LogoutRequest logoutRequest) {
+        return ResponseEntity.ok(authService.logout(authorizationHeader, logoutRequest));
     }
 }

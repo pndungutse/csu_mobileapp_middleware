@@ -49,40 +49,42 @@ public class HopeBankAppMiddlewareApplication {
 
 	}
 
-//	@Bean
-//	public CommandLineRunner seedUsersAndRoles(
-//			RoleRepository roleRepository,
-//			UserRepository userRepository,
-//			PasswordEncoder passwordEncoder
-//	) {
-//		return args -> {
-//			Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-//					.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_ADMIN").build()));
-//			Role userRole = roleRepository.findByName("ROLE_USER")
-//					.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_USER").build()));
-//
-//			if (!userRepository.existsByUsername("pndungutse")) {
-//				userRepository.save(User.builder()
-//						.name("pndungutse")
-//						.username("0788121212")
-//						.env("TURAME")
-//						.email("pndungutse@example.com")
-//						.password(passwordEncoder.encode("Rwanda@Kigali123"))
-//						.roles(Collections.singleton(userRole))
-//						.build());
-//			}
-//
-//			if (!userRepository.existsByUsername("admin")) {
-//				userRepository.save(User.builder()
-//						.name("admin")
-//						.username("0788000000")
-//						.env("Turame")
-//						.email("admin@example.com")
-//						.password(passwordEncoder.encode("admin"))
-//						.roles(Collections.singleton(adminRole))
-//						.build());
-//			}
-//		};
-//	}
+	// @Bean
+	// public CommandLineRunner seedUsersAndRoles(
+	// 		RoleRepository roleRepository,
+	// 		UserRepository userRepository,
+	// 		PasswordEncoder passwordEncoder
+	// ) {
+	// 	return args -> {
+	// 		Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+	// 				.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_ADMIN").build()));
+	// 		Role userRole = roleRepository.findByName("ROLE_USER")
+	// 				.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_USER").build()));
+
+	// 		if (!userRepository.existsByUsername("pndungutse")) {
+	// 			userRepository.save(User.builder()
+	// 					.first_name("Ndungutse")
+	// 					.last_name("Patrick")
+	// 					.username("0788121212")
+	// 					.env("TURAME")
+	// 					.email("pndungutse@example.com")
+	// 					.password(passwordEncoder.encode("Rwanda@Kigali123"))
+	// 					.roles(Collections.singleton(userRole))
+	// 					.build());
+	// 		}
+
+	// 		if (!userRepository.existsByUsername("admin")) {
+	// 			userRepository.save(User.builder()
+	// 					.first_name("admin")
+	// 					.last_name("admin")
+	// 					.username("0788000000")
+	// 					.env("Turame")
+	// 					.email("admin@example.com")
+	// 					.password(passwordEncoder.encode("admin"))
+	// 					.roles(Collections.singleton(adminRole))
+	// 					.build());
+	// 		}
+	// 	};
+	// }
 
 }

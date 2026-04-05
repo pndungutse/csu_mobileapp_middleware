@@ -11,6 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class JWTAuthResponse {
     private String accessToken;
+    private String refreshToken;
     private String tokenType = "Bearer";
+    private long expiresIn;
     private boolean mustChangePassword;
 }

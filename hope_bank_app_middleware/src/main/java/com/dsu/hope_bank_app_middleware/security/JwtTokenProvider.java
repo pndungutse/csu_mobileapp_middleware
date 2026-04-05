@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtTokenProvider {
@@ -25,32 +26,34 @@ public class JwtTokenProvider {
     @Value("${app.jwt-secret}")
     private String jwtSecret;
 
-    @Value("${app-jwt-expiration-milliseconds}")
-    private long jwtExpirationDate;
+    @Value("${app.jwt.access-token-expiration-ms:900000}")
+    private long accessTokenExpirationMs;
 
-    // generate JWT token
-    public String generateToken(Authentication authentication){
-        String username = authentication.getName();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomAPIException(HttpStatus.BAD_REQUEST, "User not found: " + username));
+    public String generateToken(Authentication authentication) {
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new CustomAPIException(HttpStatus.BAD_REQUEST, "User not found: " + authentication.getName()));
+        return generateAccessToken(user);
+    }
 
+    public String generateAccessToken(User user) {
         Date currentDate = new Date();
-
-        Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
-
-        String token = Jwts.builder()
-                .setSubject(username)
+        Date expireDate = new Date(currentDate.getTime() + accessTokenExpirationMs);
+        return Jwts.builder()
+                .setSubject(user.getUsername())
                 .claim("first_name", user.getFirst_name())
                 .claim("last_name", user.getLast_name())
                 .claim("customer_number", user.getCustomer_number())
                 .claim("mustChangePassword", user.isMustChangePassword())
                 .claim("env", user.getEnv())
                 .claim("email", user.getEmail())
-                .setIssuedAt(new Date())
+                .setIssuedAt(currentDate)
                 .setExpiration(expireDate)
                 .signWith(key())
                 .compact();
-        return token;
+    }
+
+    public long getAccessTokenExpirationSeconds() {
+        return accessTokenExpirationMs / 1000;
     }
 
     private Key key(){
@@ -59,15 +62,13 @@ public class JwtTokenProvider {
         );
     }
 
-    // get username from Jwt token
     public String getUsername(String token){
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        String username = claims.getSubject();
-        return username;
+        return claims.getSubject();
     }
 
     public Date getExpirationDate(String token){
@@ -79,7 +80,6 @@ public class JwtTokenProvider {
         return claims.getExpiration();
     }
 
-    // validate Jwt token
     public boolean validateToken(String token){
         try{
             Jwts.parserBuilder()
@@ -95,6 +95,26 @@ public class JwtTokenProvider {
             throw new CustomAPIException(HttpStatus.BAD_REQUEST, "Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
             throw new CustomAPIException(HttpStatus.BAD_REQUEST, "JWT claims string is empty.");
+        }
+    }
+
+    /**
+     * For logout: accept a still-valid or expired access JWT (signature verified).
+     * Returns empty if the string is not a JWT (e.g. opaque refresh token mistakenly sent as Bearer).
+     */
+    public Optional<Claims> parseAccessTokenClaimsAllowingExpired(String token) {
+        try {
+            return Optional.of(Jwts.parserBuilder()
+                    .setSigningKey(key())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody());
+        } catch (ExpiredJwtException ex) {
+            return Optional.of(ex.getClaims());
+        } catch (MalformedJwtException | IllegalArgumentException ex) {
+            return Optional.empty();
+        } catch (JwtException ex) {
+            throw new CustomAPIException(HttpStatus.BAD_REQUEST, "Invalid JWT token");
         }
     }
 }

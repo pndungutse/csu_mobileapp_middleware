@@ -49,6 +49,7 @@ public class SecurityConfig {
                         authorize.requestMatchers(new AntPathRequestMatcher("/api/v1/navigation/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/auth/login")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/auth/register")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/auth/refresh")).permitAll()
                                 .anyRequest().authenticated()
                 ).exceptionHandling( exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint)
