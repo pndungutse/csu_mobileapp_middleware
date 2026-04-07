@@ -50,6 +50,7 @@ public class SecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/api/auth/login")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/auth/register")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/auth/refresh")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/auth/isPasscodeValid")).permitAll()
                                 .anyRequest().authenticated()
                 ).exceptionHandling( exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint)

@@ -10,5 +10,7 @@ public interface StoredRefreshTokenRepository extends MongoRepository<StoredRefr
 
     Optional<StoredRefreshToken> findByToken(String token);
 
+    List<StoredRefreshToken> findByUsername(String username);
+
     List<StoredRefreshToken> findByUsernameAndRevokedFalse(String username);
 }

@@ -3,6 +3,7 @@ package com.dsu.hope_bank_app_middleware.security.controller;
 import com.dsu.hope_bank_app_middleware.security.request.ChangePasswordRequest;
 import com.dsu.hope_bank_app_middleware.security.request.LoginRequest;
 import com.dsu.hope_bank_app_middleware.security.request.LogoutRequest;
+import com.dsu.hope_bank_app_middleware.security.request.PasscodeValidationRequest;
 import com.dsu.hope_bank_app_middleware.security.request.RefreshTokenRequest;
 import com.dsu.hope_bank_app_middleware.security.request.RegisterRequest;
 import com.dsu.hope_bank_app_middleware.security.response.JWTAuthResponse;
@@ -24,9 +25,9 @@ public class AuthController {
         this.authService = authService;
     }
 
-//    Build login rest api
+    //    Build login rest api
     @PostMapping("/login")
-    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginRequest loginRequest) {
         JWTAuthResponse jwtAuthResponse = authService.login(loginRequest);
         return ResponseEntity.ok(jwtAuthResponse);
     }
@@ -38,13 +39,13 @@ public class AuthController {
 
     //    Build register rest api
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
         String response = authService.register(registerRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest){
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
         String response = authService.changePassword(changePasswordRequest);
         return ResponseEntity.ok(response);
     }
@@ -54,5 +55,11 @@ public class AuthController {
             @RequestHeader("Authorization") String authorizationHeader,
             @RequestBody(required = false) LogoutRequest logoutRequest) {
         return ResponseEntity.ok(authService.logout(authorizationHeader, logoutRequest));
+    }
+
+    @PostMapping("/isPasscodeValid")
+    public ResponseEntity<Boolean> isPasscodeValid(
+            @RequestBody PasscodeValidationRequest passcodeValidationRequest) {
+        return ResponseEntity.ok(authService.isPasscodeValid(passcodeValidationRequest));
     }
 }

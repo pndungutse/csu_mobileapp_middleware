@@ -1,5 +1,6 @@
 package com.dsu.hope_bank_app_middleware.security;
 
+import com.dsu.hope_bank_app_middleware.exception.CustomAPIException;
 import com.dsu.hope_bank_app_middleware.security.entity.StoredAccessToken;
 import com.dsu.hope_bank_app_middleware.security.entity.User;
 import com.dsu.hope_bank_app_middleware.security.repository.StoredAccessTokenRepository;
@@ -50,48 +51,50 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // get JWT token from http request
         String token = getTokenFromRequest(request);
 
-        // validate token
-        if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
-            if (tokenBlacklistService.isBlacklisted(token)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"message\":\"Token is invalidated. Please login again.\"}");
-                return;
+        try {
+            // validate token
+            if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
+                if (tokenBlacklistService.isBlacklisted(token)) {
+                    writeJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "Token is invalidated. Please login again.");
+                    return;
+                }
+
+                Optional<StoredAccessToken> stored = storedAccessTokenRepository.findByToken(token);
+                if (stored.isPresent() && stored.get().isRevoked()) {
+                    writeJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "Token is revoked. Please login again.");
+                    return;
+                }
+
+                // get username from token
+                String username = jwtTokenProvider.getUsername(token);
+                User user = userRepository.findByUsername(username).orElse(null);
+
+                // Block access to non-auth resources until the user changes the initial password.
+                if (user != null && user.isMustChangePassword() && !isPasswordChangeAllowedPath(request.getRequestURI())) {
+                    writeJsonError(response, HttpServletResponse.SC_FORBIDDEN, "Password change required before accessing this resource");
+                    return;
+                }
+
+                // load the user associated with token
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-
-            Optional<StoredAccessToken> stored = storedAccessTokenRepository.findByToken(token);
-            if (stored.isPresent() && stored.get().isRevoked()) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"message\":\"Token is revoked. Please login again.\"}");
-                return;
-            }
-
-            // get username from token
-            String username = jwtTokenProvider.getUsername(token);
-            User user = userRepository.findByUsername(username).orElse(null);
-
-            // Block access to non-auth resources until the user changes the initial password.
-            if (user != null && user.isMustChangePassword() && !isPasswordChangeAllowedPath(request.getRequestURI())) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"message\":\"Password change required before accessing this resource\"}");
-                return;
-            }
-
-            // load the user associated with token
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
-            );
-
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
+        } catch (CustomAPIException ex) {
+            // Exceptions thrown in filters bypass @ControllerAdvice, so format response here.
+            int status = "Expired JWT token".equals(ex.getMessage())
+                    ? HttpServletResponse.SC_UNAUTHORIZED
+                    : HttpServletResponse.SC_BAD_REQUEST;
+            writeJsonError(response, status, ex.getMessage());
+            return;
         }
 
         filterChain.doFilter(request, response);
@@ -114,6 +117,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || "/api/auth/refresh".equals(path)
                 || "/api/auth/change-password".equals(path)
                 || "/api/auth/logout".equals(path);
+    }
+
+    private void writeJsonError(HttpServletResponse response, int status, String message) throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"message\":\"" + message + "\"}");
     }
 
 

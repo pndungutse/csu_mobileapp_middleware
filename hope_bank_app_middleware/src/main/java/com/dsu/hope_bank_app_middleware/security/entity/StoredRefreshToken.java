@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 
@@ -27,6 +28,9 @@ public class StoredRefreshToken {
 
     @Indexed(unique = true)
     private String token;
+
+    @Field("refresh_passcode")
+    private String refreshPasscode;
 
     private Date issuedAt;
 

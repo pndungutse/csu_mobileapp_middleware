@@ -14,6 +14,7 @@ import com.dsu.hope_bank_app_middleware.security.repository.UserRepository;
 import com.dsu.hope_bank_app_middleware.security.request.ChangePasswordRequest;
 import com.dsu.hope_bank_app_middleware.security.request.LoginRequest;
 import com.dsu.hope_bank_app_middleware.security.request.LogoutRequest;
+import com.dsu.hope_bank_app_middleware.security.request.PasscodeValidationRequest;
 import com.dsu.hope_bank_app_middleware.security.request.RefreshTokenRequest;
 import com.dsu.hope_bank_app_middleware.security.request.RegisterRequest;
 import com.dsu.hope_bank_app_middleware.security.response.JWTAuthResponse;
@@ -98,6 +99,7 @@ public class AuthServiceImpl implements AuthService {
                 .userId(user.getId())
                 .username(user.getUsername())
                 .token(refreshTokenValue)
+                .refreshPasscode(user.getPassword())
                 .issuedAt(now)
                 .expiresAt(refreshExpires)
                 .revoked(false)
@@ -147,6 +149,7 @@ public class AuthServiceImpl implements AuthService {
                 .userId(user.getId())
                 .username(user.getUsername())
                 .token(newRefresh)
+                .refreshPasscode(user.getPassword())
                 .issuedAt(now)
                 .expiresAt(refreshExpires)
                 .revoked(false)
@@ -194,6 +197,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(roles);
 
         userRepository.save(user);
+        syncRefreshPasscode(user, true);
         return "User registered successfully!";
     }
 
@@ -218,6 +222,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
         user.setMustChangePassword(false);
         userRepository.save(user);
+        syncRefreshPasscode(user, false);
 
         revokeAllActiveTokensForUser(user.getUsername());
 
@@ -264,6 +269,35 @@ public class AuthServiceImpl implements AuthService {
         return "Logged out successfully";
     }
 
+    @Override
+    public boolean isPasscodeValid(PasscodeValidationRequest passcodeValidationRequest) {
+        System.out.println("Username: "+passcodeValidationRequest+" Password: "+passcodeValidationRequest.getPassword());
+        if (passcodeValidationRequest == null
+                || !StringUtils.hasText(passcodeValidationRequest.getUsername())
+                || !StringUtils.hasText(passcodeValidationRequest.getPassword())) {
+            System.out.println("Returning false, no username"+passcodeValidationRequest.getUsername()+" No password: "+passcodeValidationRequest.getPassword());
+            return false;
+        }
+
+        String username = passcodeValidationRequest.getUsername().trim();
+        List<StoredRefreshToken> refreshRows = storedRefreshTokenRepository.findByUsername(username);
+        if (refreshRows.isEmpty()) {
+            System.out.println("Returning false, no stored refresh token");
+            return false;
+        }
+
+        String rawPassword = passcodeValidationRequest.getPassword();
+        for (StoredRefreshToken row : refreshRows) {
+            if (StringUtils.hasText(row.getRefreshPasscode())
+                    && passwordEncoder.matches(rawPassword, row.getRefreshPasscode())) {
+                System.out.println("Returning True, password matches");
+                return true;
+            }
+        }
+        System.out.println("Returning false");
+        return false;
+    }
+
     private void persistAccessToken(User user, String accessJwt) {
         Date now = new Date();
         StoredAccessToken stored = StoredAccessToken.builder()
@@ -305,6 +339,28 @@ public class AuthServiceImpl implements AuthService {
         for (StoredAccessToken st : active) {
             Date exp = st.getExpiresAt() != null ? st.getExpiresAt() : fallbackExp;
             tokenBlacklistService.blacklist(st.getToken(), exp);
+        }
+    }
+
+    private void syncRefreshPasscode(User user, boolean createIfMissing) {
+        List<StoredRefreshToken> refreshRows = storedRefreshTokenRepository.findByUsername(user.getUsername());
+        if (refreshRows.isEmpty() && createIfMissing) {
+            StoredRefreshToken bootstrapRow = StoredRefreshToken.builder()
+                    .userId(user.getId())
+                    .username(user.getUsername())
+                    .token(UUID.randomUUID().toString())
+                    .refreshPasscode(user.getPassword())
+                    .issuedAt(new Date())
+                    .expiresAt(new Date())
+                    .revoked(true)
+                    .build();
+            storedRefreshTokenRepository.save(bootstrapRow);
+            return;
+        }
+
+        for (StoredRefreshToken row : refreshRows) {
+            row.setRefreshPasscode(user.getPassword());
+            storedRefreshTokenRepository.save(row);
         }
     }
 }

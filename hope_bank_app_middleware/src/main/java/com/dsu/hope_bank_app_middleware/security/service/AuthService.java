@@ -3,6 +3,7 @@ package com.dsu.hope_bank_app_middleware.security.service;
 import com.dsu.hope_bank_app_middleware.security.request.ChangePasswordRequest;
 import com.dsu.hope_bank_app_middleware.security.request.LoginRequest;
 import com.dsu.hope_bank_app_middleware.security.request.LogoutRequest;
+import com.dsu.hope_bank_app_middleware.security.request.PasscodeValidationRequest;
 import com.dsu.hope_bank_app_middleware.security.request.RefreshTokenRequest;
 import com.dsu.hope_bank_app_middleware.security.request.RegisterRequest;
 import com.dsu.hope_bank_app_middleware.security.response.JWTAuthResponse;
@@ -17,4 +18,6 @@ public interface AuthService {
     String changePassword(ChangePasswordRequest changePasswordRequest);
 
     String logout(String authorizationHeader, LogoutRequest logoutRequest);
+
+    boolean isPasscodeValid(PasscodeValidationRequest passcodeValidationRequest);
 }
