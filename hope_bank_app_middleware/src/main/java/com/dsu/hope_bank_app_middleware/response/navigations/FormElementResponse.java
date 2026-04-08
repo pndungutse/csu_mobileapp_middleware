@@ -1,10 +1,7 @@
 package com.dsu.hope_bank_app_middleware.response.navigations;
 
-import com.dsu.hope_bank_app_middleware.enumeration.FormElementSelectItem;
+import com.dsu.hope_bank_app_middleware.enumeration.*;
 import com.dsu.hope_bank_app_middleware.exception.SuccessResponse;
-import com.dsu.hope_bank_app_middleware.enumeration.FormElementType;
-import com.dsu.hope_bank_app_middleware.enumeration.Status;
-import com.dsu.hope_bank_app_middleware.enumeration.ValueType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,6 +43,18 @@ public class FormElementResponse {
     private String formElementFetchInfoUrl;
     @JsonProperty("form_element_default_value")
     private String formElementDefaultValue;
+    @JsonProperty("form_element_populate_info")
+    private FormElementPopulateInfo formElementPopulateInfo;
+    @JsonProperty("form_element_auto_fill")
+    private FormElementAutofill formElementAutofill;
+    @JsonProperty("form_element_auto_fill_field_name")
+    private String formElementAutofillFieldName;
+    @JsonProperty("form_element_auto_fill_parent_field_name")
+    private String formElementAutofillParentFieldName;
+    @JsonProperty("form_element_change_read_only_field_name")
+    private String formElementChangeReadOnlyFieldName;
+    @JsonProperty("form_element_change_read_only_field_value")
+    private String formElementChangeReadOnlyFieldValue;
     @JsonProperty("sub_menu_item_name")
     private String subMenuItemName;
     @JsonProperty("form_element_added_date")
