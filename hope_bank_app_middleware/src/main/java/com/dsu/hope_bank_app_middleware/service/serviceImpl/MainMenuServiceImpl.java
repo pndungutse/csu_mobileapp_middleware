@@ -118,6 +118,13 @@ public class MainMenuServiceImpl implements MainMenuService {
     }
 
     @Override
+    public ResponseEntity<List<MainMenuResponse>> getAllMainMenusByBankName(String bankName) {
+        AssociateBank associateBank = associateBankRepository.findByAssociateBankName(bankName)
+                .orElseThrow(() -> new ResourceNotFoundException("Associate Bank not found"));
+        return getAllMainMenusByBankId(associateBank.getId());
+    }
+
+    @Override
     public ResponseEntity<MainMenuResponse> updateMainMenu(String id, MainMenuRequest request) {
         System.out.println("Request: "+request);
         System.out.println("ID: "+id);

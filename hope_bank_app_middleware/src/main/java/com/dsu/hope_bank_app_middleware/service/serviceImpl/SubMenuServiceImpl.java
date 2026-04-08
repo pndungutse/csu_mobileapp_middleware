@@ -129,6 +129,13 @@ public class SubMenuServiceImpl implements SubMenuService {
     }
 
     @Override
+    public ResponseEntity<List<SubMenuResponse>> getAllSubMenusByBankName(String bankName) {
+        AssociateBank associateBank = associateBankRepository.findByAssociateBankName(bankName)
+                .orElseThrow(() -> new ResourceNotFoundException("Associate bank not found with bank name: " + bankName));
+        return getAllSubMenusByBankId(associateBank.getId());
+    }
+
+    @Override
     public ResponseEntity<List<SubMenuResponse>> getAllSubMenus() {
         // Fetch all submenus associated with the bank ID using direct relationship
         List<SubMenu> subMenus = subMenuRepository.findAll();

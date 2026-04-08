@@ -55,4 +55,11 @@ public class MainMenuController {
     ) {
         return mainMenuService.getAllMainMenusByBankId(id);
     }
+
+    @GetMapping("/main_menus_by_bank_name/{bank_name}")
+    public ResponseEntity<List<MainMenuResponse>> getAllMainMenusByBankName(
+            @PathVariable String bank_name
+    ) {
+        return mainMenuService.getAllMainMenusByBankName(bank_name);
+    }
 }

@@ -7,6 +7,9 @@ import com.dsu.hope_bank_app_middleware.dto.SingleAccountDTO;
 import com.dsu.hope_bank_app_middleware.request.*;
 import com.dsu.hope_bank_app_middleware.response.*;
 import com.dsu.hope_bank_app_middleware.service.AccountService;
+import com.dsu.hope_bank_app_middleware.utils.T24EnvironmentConfig;
+import com.dsu.hope_bank_app_middleware.utils.T24EnvironmentResolver;
+import com.dsu.hope_bank_app_middleware.utils.T24RequestBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.uuid.Generators;
@@ -42,27 +45,50 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountResponse getAccountInformation(AccountRequest accountRequest) {
-        System.out.println("Account request: "+accountRequest);
-        // Map AccountRequest to AccountDTO
-        AccountDTO accountDTO = mapToAccountDTO(accountRequest);
-//        System.out.println("AccountDTO: "+accountDTO);
-        accountDTO.getParameters().setCustomerId(accountRequest.getCustomerId());
-//        accountDTO.getParameters().setTxnType("AccountInformation");
+        System.out.println("AccountRequest: "+accountRequest);
+        accountRequest.setTxn_type(dsuMobApp.getAccount_information_txn_type());
+        String uniqueRef = UUID.randomUUID().toString();
 
-        // Call the T24 endpoint
-        String t24_base_url = dsuMobApp.getT24_base_url();
+        Map<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("txn_type", accountRequest.getTxn_type());
+        if (accountRequest.getAccountNumber() != null && !accountRequest.getAccountNumber().trim().isEmpty()) {
+            parameters.put("accountNumber", accountRequest.getAccountNumber().trim());
+        }
+        if (accountRequest.getCustomerid() != null && !accountRequest.getCustomerid().trim().isEmpty()) {
+            parameters.put("Customerid", accountRequest.getCustomerid().trim());
+        }
+        if (accountRequest.getLegalId() != null && !accountRequest.getLegalId().trim().isEmpty()) {
+            parameters.put("legalId", accountRequest.getLegalId().trim());
+        }
+        parameters.put("unique_txn_ref", uniqueRef);
 
-        HttpHeaders headers = new HttpHeaders();
+        Map<String, Object> requestBody = new LinkedHashMap<>();
+        requestBody.put("action", "TRANSACTION");
+        requestBody.put("parameters", parameters);
+        requestBody.put("sequence", uniqueRef);
 
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Content-Type", "application/json");
-        headers.set("Sender-Reference", dsuMobApp.getT24_sender_reference());
-        headers.set("Service-Source", dsuMobApp.getT24_service_source());
-        headers.set("Token", dsuMobApp.getT24_token());
-        headers.set("Token-Password", dsuMobApp.getT24_token_password());
-        HttpEntity<AccountDTO> entity = new HttpEntity<>(accountDTO, headers);
-//        logPayload(accountDTO);
-        ResponseEntity<String> t24Response = restTemplate.exchange(t24_base_url, HttpMethod.POST, entity, String.class);
+        T24EnvironmentConfig t24Config = T24EnvironmentResolver.resolve(dsuMobApp, accountRequest.getEnvironment());
+        T24RequestBuilder.T24Request<Map<String, Object>> t24Request = T24RequestBuilder.build(
+                t24Config.getUrl(),
+                t24Config.getSenderReference(),
+                t24Config.getServiceSource(),
+                t24Config.getToken(),
+                t24Config.getTokenPassword(),
+                requestBody
+        );
+
+        logger.log(Level.INFO, "T24 account URL: {0}", t24Request.getUrl());
+        try {
+            logger.log(Level.INFO, "T24 account payload JSON: {0}", new ObjectMapper().writeValueAsString(requestBody));
+        } catch (Exception e) {
+            logger.log(Level.INFO, "T24 account payload fallback: {0}", requestBody);
+        }
+        ResponseEntity<String> t24Response = restTemplate.exchange(
+                t24Request.getUrl(),
+                HttpMethod.POST,
+                t24Request.getEntity(),
+                String.class
+        );
 
 
         logger.log(Level.INFO, t24Response.getBody());
@@ -205,14 +231,14 @@ public class AccountServiceImpl implements AccountService {
     private AccountDTO mapToAccountDTO(AccountRequest accountRequest) {
         AccountDTO dto = new AccountDTO();
         AccountDTO.Parameters params = new AccountDTO.Parameters();
-        params.setTxnType(accountRequest.getTxnType());
+        params.setTxn_type(accountRequest.getTxn_type());
         params.setAccountNumber(accountRequest.getAccountNumber());
-        params.setCustomerId(accountRequest.getCustomerId());
+        params.setCustomerid(accountRequest.getCustomerid());
         params.setLegalId(accountRequest.getLegalId());
-        params.setUniqueTxnRef(UUID.randomUUID().toString());
+        params.setUnique_txn_ref(UUID.randomUUID().toString());
 
         dto.setParameters(params);
-        dto.setSequence(params.getUniqueTxnRef());
+        dto.setSequence(params.getUnique_txn_ref());
         return dto;
     }
 

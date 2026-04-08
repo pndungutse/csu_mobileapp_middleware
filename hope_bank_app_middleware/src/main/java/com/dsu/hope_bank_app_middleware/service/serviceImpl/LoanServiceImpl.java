@@ -6,6 +6,10 @@ import com.dsu.hope_bank_app_middleware.request.*;
 import com.dsu.hope_bank_app_middleware.response.LoanBalanceResponse;
 import com.dsu.hope_bank_app_middleware.response.LoanRepaymentResponse;
 import com.dsu.hope_bank_app_middleware.service.LoanService;
+import com.dsu.hope_bank_app_middleware.utils.T24EnvironmentConfig;
+import com.dsu.hope_bank_app_middleware.utils.T24EnvironmentResolver;
+import com.dsu.hope_bank_app_middleware.utils.T24RequestBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +43,9 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public LoanBalanceResponse.Result getLoanInfo(LoanInfoRequest request) {
-        String t24BaseUrl = dsuMobApp.getT24_base_url();
-        logger.log(Level.INFO, "T24 base Url: {0}", t24BaseUrl);
-        logger.log(Level.INFO, "Account Info request: {0}", request);
+//        String t24BaseUrl = dsuMobApp.getT24_base_url();
+//        logger.log(Level.INFO, "T24 base Url: {0}", t24BaseUrl);
+//        logger.log(Level.INFO, "Account Info request: {0}", request);
 
         String uniqueRef = uuidGenerator.generate().toString();
 
@@ -57,23 +61,31 @@ public class LoanServiceImpl implements LoanService {
         requestBody.put("parameters", parameters);
         requestBody.put("sequence", uniqueRef);
 
+        T24EnvironmentConfig t24Config = T24EnvironmentResolver.resolve(dsuMobApp, request.getEnvironment());
         logger.log(Level.INFO, "Request Body: {0}", requestBody);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        headers.set("Sender-Reference", dsuMobApp.getT24_sender_reference());
-        headers.set("Service-Source", dsuMobApp.getT24_service_source());
-        headers.set("Token", dsuMobApp.getT24_token());
-        headers.set("Token-Password", dsuMobApp.getT24_token_password());
-
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-
-        // Make API call
-        ResponseEntity<LoanBalanceResponse> response = restTemplate.exchange(
-                t24BaseUrl, HttpMethod.POST, entity, LoanBalanceResponse.class
+        T24RequestBuilder.T24Request<Map<String, Object>> t24Request = T24RequestBuilder.build(
+                t24Config.getUrl(),
+                t24Config.getSenderReference(),
+                t24Config.getServiceSource(),
+                t24Config.getToken(),
+                t24Config.getTokenPassword(),
+                requestBody
         );
 
-        LoanBalanceResponse loanBalanceResponse = response.getBody();
+        logger.log(Level.INFO, "T24 Loan info URL: {0}", t24Request.getUrl());
+        try {
+            logger.log(Level.INFO, "T24 Loan info payload JSON: {0}", new ObjectMapper().writeValueAsString(requestBody));
+        } catch (Exception e) {
+            logger.log(Level.INFO, "T24 Loan info payload fallback: {0}", requestBody);
+        }
+        ResponseEntity<LoanBalanceResponse> t24Response = restTemplate.exchange(
+                t24Request.getUrl(),
+                HttpMethod.POST,
+                t24Request.getEntity(),
+                LoanBalanceResponse.class
+        );
+
+        LoanBalanceResponse loanBalanceResponse = t24Response.getBody();
         assert loanBalanceResponse != null;
         return loanBalanceResponse.getResponseMessage().getResult();
     }

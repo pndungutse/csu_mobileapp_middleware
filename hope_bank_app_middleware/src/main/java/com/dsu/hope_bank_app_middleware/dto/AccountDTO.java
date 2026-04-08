@@ -1,5 +1,6 @@
 package com.dsu.hope_bank_app_middleware.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountDTO {
     @JsonProperty("action")
     private String action = "TRANSACTION";
@@ -23,16 +25,12 @@ public class AccountDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Parameters {
-        @JsonProperty("txn_type")
-        private String txnType = "AccountInformation";
-        @JsonProperty("accountNumber")
+        private String txn_type;
         private String accountNumber;
-        @JsonProperty("Customerid")
-        private String customerId;
-        @JsonProperty("legalId")
+        private String Customerid;
         private String legalId;
-        @JsonProperty("unique_txn_ref")
-        private String uniqueTxnRef;
+        private String unique_txn_ref;
     }
 }

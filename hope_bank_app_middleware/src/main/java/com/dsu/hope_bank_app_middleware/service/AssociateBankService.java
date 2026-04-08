@@ -10,6 +10,7 @@ import java.util.List;
 public interface AssociateBankService {
     ResponseEntity<AssociateBankResponse> createAssociateBank(AssociateBankRequest request);
     ResponseEntity<AssociateBankResponse> getAssociateBankById(String id);
+    ResponseEntity<AssociateBankResponse> getAssociateBankByBankName(String bankName);
     ResponseEntity<List<AssociateBankResponse>> getAllAssociateBanks();
     ResponseEntity<AssociateBankResponse> updateAssociateBank(String id, AssociateBankRequest request);
     ResponseEntity<AssociateBankResponse> deleteAssociateBank(String id);

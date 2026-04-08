@@ -44,6 +44,13 @@ public class SubMenuController {
         return subMenuService.getAllSubMenusByBankId(id);
     }
 
+    @GetMapping("/sub_menus_by_associate_bank_name/{bank_name}")
+    public ResponseEntity<List<SubMenuResponse>> getAllSubMenusByBankName(
+            @PathVariable String bank_name
+    ) {
+        return subMenuService.getAllSubMenusByBankName(bank_name);
+    }
+
     //    http://localhost:8080/api/v1/navigation/sub_menus_by_bank_id/{id} GET
     @GetMapping("/sub_menus")
     public ResponseEntity<List<SubMenuResponse>> getAllSubMenus() {

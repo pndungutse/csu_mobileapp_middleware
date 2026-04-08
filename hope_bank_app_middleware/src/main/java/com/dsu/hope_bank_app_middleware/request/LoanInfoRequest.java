@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class LoanInfoRequest {
     @JsonProperty("loan")
     private String loan;
+    private String environment;
 }

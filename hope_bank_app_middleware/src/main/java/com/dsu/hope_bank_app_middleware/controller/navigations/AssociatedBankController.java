@@ -32,6 +32,11 @@ public class AssociatedBankController {
         return associateBankService.getAssociateBankById(id);
     }
 
+    @GetMapping("/associated_banks/by_name/{bank_name}")
+    public ResponseEntity<AssociateBankResponse> getAssociateBankByBankName(@PathVariable String bank_name) {
+        return associateBankService.getAssociateBankByBankName(bank_name);
+    }
+
     //    http://localhost:8080/api/v1/navigation/associated_banks/{id} PUT
     @PutMapping("/associated_banks/{id}")
     public ResponseEntity<AssociateBankResponse> updateAssociateBank(@PathVariable String id, @RequestBody AssociateBankRequest request) {

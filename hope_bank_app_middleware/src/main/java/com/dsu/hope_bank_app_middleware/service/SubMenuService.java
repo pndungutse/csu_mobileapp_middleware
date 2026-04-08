@@ -19,6 +19,7 @@ public interface SubMenuService {
     ResponseEntity<SubMenuResponse> updateSubMenu(String id, SubMenuRequest request);
 
     ResponseEntity<List<SubMenuResponse>> getAllSubMenusByBankId(String id);
+    ResponseEntity<List<SubMenuResponse>> getAllSubMenusByBankName(String bankName);
 
     ResponseEntity<List<SubMenuResponse>> getAllSubMenus();
 

@@ -12,6 +12,7 @@ public interface MainMenuService {
     ResponseEntity<MainMenuResponse> createMainMenu(MainMenuRequest request);
     ResponseEntity<MainMenuResponse> getMainMenuById(String id);
     ResponseEntity<List<MainMenuResponse>> getAllMainMenusByBankId(String associatedBankId);
+    ResponseEntity<List<MainMenuResponse>> getAllMainMenusByBankName(String bankName);
     ResponseEntity<MainMenuResponse> updateMainMenu(String id, MainMenuRequest request);
     ResponseEntity<MainMenuResponse> deleteMainMenu(String id);
 

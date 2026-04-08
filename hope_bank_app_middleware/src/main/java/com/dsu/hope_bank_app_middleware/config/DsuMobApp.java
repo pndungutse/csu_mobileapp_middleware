@@ -15,6 +15,12 @@ public class DsuMobApp {
     private String t24_service_source;
     private String t24_token_password;
 
+    private String t24_congo_base_url;
+    private String t24_congo_token;
+    private String t24_congo_token_password;
+    private String t24_congo_sender_reference;
+    private String t24_congo_service_source;
+
     private String self_registration_txn_type;
     private String mini_statement_txn_type;
     private String account_information_txn_type;

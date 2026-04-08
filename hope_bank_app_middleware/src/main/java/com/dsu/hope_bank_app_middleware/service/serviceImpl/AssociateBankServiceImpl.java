@@ -82,6 +82,22 @@ public class AssociateBankServiceImpl implements AssociateBankService {
     }
 
     @Override
+    public ResponseEntity<AssociateBankResponse> getAssociateBankByBankName(String bankName) {
+        AssociateBank associateBank = associateBankRepository.findByAssociateBankName(bankName)
+                .orElseThrow(() -> new ResourceNotFoundException("AssociateBank not found"));
+
+        SuccessResponse successResponse = SuccessResponse.builder()
+                .type(ResponseType.success)
+                .description("AssociateBank retrieved successfully")
+                .status(HttpStatus.OK)
+                .build();
+
+        AssociateBankResponse associateBankResponse = mappings.mapToResponse(associateBank);
+        associateBankResponse.setSuccessResponse(successResponse);
+        return new ResponseEntity<>(associateBankResponse, HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<List<AssociateBankResponse>> getAllAssociateBanks() {
         // Fetch all associate banks from the repository
         List<AssociateBank> associateBanks = associateBankRepository.findAll();
