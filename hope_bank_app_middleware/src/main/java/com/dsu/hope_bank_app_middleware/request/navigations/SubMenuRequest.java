@@ -1,6 +1,7 @@
 package com.dsu.hope_bank_app_middleware.request.navigations;
 
 import com.dsu.hope_bank_app_middleware.enumeration.MainMenuBelong;
+import com.dsu.hope_bank_app_middleware.enumeration.ServiceWaitResponse;
 import com.dsu.hope_bank_app_middleware.enumeration.Status;
 import com.dsu.hope_bank_app_middleware.enumeration.SubMenuCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,5 +34,7 @@ public class SubMenuRequest {
     private MainMenuBelong subMenuBelongToMenu;
     @JsonProperty("sub_menu_display_order")
     private Integer subMenuDisplayOrder;
+    @JsonProperty("sub_menu_wait_response")
+    private String serviceWaitResponse;
 
 }

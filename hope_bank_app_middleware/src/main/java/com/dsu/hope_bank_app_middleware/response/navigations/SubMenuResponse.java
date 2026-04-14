@@ -39,6 +39,8 @@ public class SubMenuResponse {
     private MainMenuBelong subMenuBelongToMenu;
     @JsonProperty("sub_menu_display_order")
     private Integer subMenuDisplayOrder;
+    @JsonProperty("sub_menu_wait_response")
+    private String serviceWaitResponse;
     @JsonProperty("sub_menu_associate_bank")
     private String subMenuAssociateBank;
     @JsonProperty("sub_menu_item_added_date")

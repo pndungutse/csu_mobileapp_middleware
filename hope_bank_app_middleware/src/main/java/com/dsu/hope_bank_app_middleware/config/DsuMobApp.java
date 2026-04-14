@@ -33,6 +33,7 @@ public class DsuMobApp {
     private String gimac_wallet_bank;
     private String bank_ips;
     private String bank_ips_pay_qr;
+    private String bank_ips_request_to_pay;
     private String ips_name_lookup_url;
     private String ips_qr_read_url;
     private String ips_qr_start_of_payment_url;

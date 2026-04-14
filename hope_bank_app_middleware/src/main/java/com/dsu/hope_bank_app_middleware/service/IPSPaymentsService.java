@@ -4,10 +4,12 @@ import com.dsu.hope_bank_app_middleware.request.GenericRequest;
 import com.dsu.hope_bank_app_middleware.request.ipsRequest.IPSPayQrRequest;
 import com.dsu.hope_bank_app_middleware.request.ipsRequest.IPSTransferRequest;
 import com.dsu.hope_bank_app_middleware.request.ipsRequest.IpsQrStartOfPaymentRequest;
+import com.dsu.hope_bank_app_middleware.request.ipsRequest.IpsRequestToPayRequest;
 import com.dsu.hope_bank_app_middleware.response.GenericDataResponse;
 import com.dsu.hope_bank_app_middleware.response.GenericResponse;
 import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsQrReadResponse;
 import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsQrStartOfPaymentResponse;
+import com.dsu.hope_bank_app_middleware.response.IPSResponse.RequestToPayResponse;
 import com.dsu.hope_bank_app_middleware.response.TransferResponse;
 
 public interface IPSPaymentsService {
@@ -22,4 +24,6 @@ public interface IPSPaymentsService {
     GenericDataResponse<IpsQrReadResponse> getIpsQrCodeInfo(GenericRequest genericRequest);
 
     GenericDataResponse<IpsQrStartOfPaymentResponse> startIpsQrStartOfPayment(IpsQrStartOfPaymentRequest request);
+
+    GenericDataResponse<RequestToPayResponse> ipsRequestToPay(IpsRequestToPayRequest request);
 }

@@ -5,10 +5,7 @@ import com.dsu.hope_bank_app_middleware.config.SSLUtil;
 import com.dsu.hope_bank_app_middleware.request.AccountBalanceRequest;
 import com.dsu.hope_bank_app_middleware.request.AccountRequest;
 import com.dsu.hope_bank_app_middleware.request.GenericRequest;
-import com.dsu.hope_bank_app_middleware.request.ipsRequest.IPSPayQrRequest;
-import com.dsu.hope_bank_app_middleware.request.ipsRequest.IPSTransferRequest;
-import com.dsu.hope_bank_app_middleware.request.ipsRequest.IpsNameLookupRequest;
-import com.dsu.hope_bank_app_middleware.request.ipsRequest.IpsQrStartOfPaymentRequest;
+import com.dsu.hope_bank_app_middleware.request.ipsRequest.*;
 import com.dsu.hope_bank_app_middleware.response.AccountBalanceResponse;
 import com.dsu.hope_bank_app_middleware.response.AccountResponse;
 import com.dsu.hope_bank_app_middleware.response.GenericDataResponse;
@@ -16,6 +13,7 @@ import com.dsu.hope_bank_app_middleware.response.GenericResponse;
 import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsNameLookupResponse;
 import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsQrReadResponse;
 import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsQrStartOfPaymentResponse;
+import com.dsu.hope_bank_app_middleware.response.IPSResponse.RequestToPayResponse;
 import com.dsu.hope_bank_app_middleware.response.TransferResponse;
 import com.dsu.hope_bank_app_middleware.service.IPSPaymentsService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,6 +35,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -521,6 +520,97 @@ public class IPSPaymentsServiceImpl implements IPSPaymentsService {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "IPS QR start-of-payment failed: {0}", e.getMessage());
             return GenericDataResponse.<IpsQrStartOfPaymentResponse>builder()
+                    .retCode("500")
+                    .message(e.getMessage() != null ? e.getMessage() : "IPS QR start-of-payment failed")
+                    .data(null)
+                    .build();
+        }
+    }
+
+    @Override
+    public GenericDataResponse<RequestToPayResponse> ipsRequestToPay(IpsRequestToPayRequest request) {
+        logger.log(Level.INFO, "IPS Request to pay request: {0}", request);
+
+        String t24BaseUrl = dsuMobApp.getT24_base_url();
+        logger.log(Level.INFO, "T24 base Url: {0}", t24BaseUrl);
+
+        String uniqueRef = uuidGenerator.generate().toString();
+
+        AccountRequest accountRequest = new AccountRequest("AccountInformation", request.getCust_account(), "", "");
+        logger.log(Level.INFO, "Account Request on for getting customer info: {0}", accountRequest);
+        AccountResponse accountResponse = accountService.getAccountInformation(accountRequest);
+        logger.log(Level.INFO, "Account Response: {0}", accountResponse);
+
+        GenericRequest genericRequest = GenericRequest.builder()
+                .requestId(request.getReceiver_account())
+                .build();
+        logger.log(Level.INFO, "Generic Request: {0}", genericRequest);
+        GenericResponse genericResponse = getIpsAccountInformation(genericRequest);
+
+        logger.log(Level.INFO, "Generic Response: {0}", genericResponse);
+
+        
+
+        String uetr = UUID.randomUUID().toString();
+        IpsRequestToPayRequest parameters = new IpsRequestToPayRequest(
+                uetr,
+                request.getTxn_amount(),
+                "BIF",
+                accountResponse.getCustomerName(),
+                request.getCust_account(),
+                genericResponse.getName(),
+                genericResponse.getId(),
+                genericResponse.getRetCode(),
+                dsuMobApp.getBank_ips_request_to_pay()
+        );
+
+        logger.log(Level.INFO, "Parameters on IPS: {0}", parameters);
+
+        // Create request body
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("action", "TRANSACTION");
+        requestBody.put("parameters", parameters);
+        requestBody.put("sequence", uniqueRef);
+
+        logger.log(Level.INFO, "Request Body: {0}", requestBody);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        headers.set("Sender-Reference", dsuMobApp.getT24_sender_reference());
+        headers.set("Service-Source", dsuMobApp.getT24_service_source());
+        headers.set("Token", dsuMobApp.getT24_token());
+        headers.set("Token-Password", dsuMobApp.getT24_token_password());
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+        // Make API call
+//        ResponseEntity<TransferResponse> response = restTemplate.exchange(
+//                t24BaseUrl, HttpMethod.POST, entity, TransferResponse.class
+//        );
+////
+//        logger.log(Level.INFO, "Response: {0}", response);
+//
+//        TransferResponse.Result transferResponseResult = response.getBody().getResponseMessage().getResult();
+//
+//        assert response.getBody() != null;
+//        return response.getBody().getResponseMessage().getResult();
+
+        try {
+            ResponseEntity<RequestToPayResponse> response1 = restTemplate.exchange(
+                    t24BaseUrl, HttpMethod.POST, entity, RequestToPayResponse.class
+            );
+            RequestToPayResponse body1 = response1.getBody();
+            logger.log(Level.INFO, "IPS Request to pay HTTP status: {0}", response1.getStatusCode());
+
+            assert body1 != null;
+            return GenericDataResponse.<RequestToPayResponse>builder()
+                    .retCode(body1.getResponseMessage().getTrackingId())
+                    .message(body1.getResponseMessage().getMessage())
+                    .data(body1)
+                    .build();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "IPS QR start-of-payment failed: {0}", e.getMessage());
+            return GenericDataResponse.<RequestToPayResponse>builder()
                     .retCode("500")
                     .message(e.getMessage() != null ? e.getMessage() : "IPS QR start-of-payment failed")
                     .data(null)

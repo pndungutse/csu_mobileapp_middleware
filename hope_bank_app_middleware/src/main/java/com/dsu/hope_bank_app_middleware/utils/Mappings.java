@@ -170,6 +170,7 @@ public class Mappings {
                 .subMenuCategory(subMenu.getSubMenuCategory())
                 .subMenuBelongToMenu(subMenu.getSubMenuBelongToMenu())
                 .subMenuDisplayOrder(subMenu.getSubMenuDisplayOrder())
+                .serviceWaitResponse(subMenu.getServiceWaitResponse())
                 .subMenuItemAddedDate(subMenu.getSubMenuItemAddedDate())
                 .subMenuItemUpdatedDate(subMenu.getSubMenuItemUpdatedDate())
                 .formElements(formElementResponses)
