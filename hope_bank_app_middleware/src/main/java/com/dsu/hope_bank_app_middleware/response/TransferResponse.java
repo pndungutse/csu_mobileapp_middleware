@@ -26,6 +26,7 @@ public class TransferResponse {
         private String ret_message;
         private String fee_amount;
         private String account_balance;
+        private String amount;
     }
 
 }

@@ -5,6 +5,7 @@ import com.dsu.hope_bank_app_middleware.config.SSLUtil;
 import com.dsu.hope_bank_app_middleware.request.*;
 import com.dsu.hope_bank_app_middleware.response.LoanBalanceResponse;
 import com.dsu.hope_bank_app_middleware.response.LoanRepaymentResponse;
+import com.dsu.hope_bank_app_middleware.response.LoanScheduleResponse;
 import com.dsu.hope_bank_app_middleware.service.LoanService;
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -167,5 +170,59 @@ public class LoanServiceImpl implements LoanService {
         logger.log(Level.INFO, "Response: {0}", loanRepaymentResponse);
         assert loanRepaymentResponse != null;
         return loanRepaymentResponse.getResponseMessage().getResult();
+    }
+
+    @Override
+    public LoanScheduleResponse.Result getLoanSchedule(LoanScheduleRequest request) {
+        String t24BaseUrl = dsuMobApp.getT24_base_url();
+        logger.log(Level.INFO, "T24 base Url: {0}", t24BaseUrl);
+        logger.log(Level.INFO, "Loan schedule request: {0}", request);
+
+        String uniqueRef = uuidGenerator.generate().toString();
+
+        LoanScheduleParameters parameters = new LoanScheduleParameters(
+                dsuMobApp.getLoan_schedule_txn_type(),
+                request.getAccountNumber(),
+                uniqueRef
+        );
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("action", "TRANSACTION");
+        requestBody.put("parameters", parameters);
+        requestBody.put("sequence", uniqueRef);
+
+        logger.log(Level.INFO, "Request Body: {0}", requestBody);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        headers.set("Sender-Reference", dsuMobApp.getT24_sender_reference());
+        headers.set("Service-Source", dsuMobApp.getT24_service_source());
+        headers.set("Token", dsuMobApp.getT24_token());
+        headers.set("Token-Password", dsuMobApp.getT24_token_password());
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<LoanScheduleResponse> response = restTemplate.exchange(
+                t24BaseUrl, HttpMethod.POST, entity, LoanScheduleResponse.class
+        );
+
+        LoanScheduleResponse loanScheduleResponse = response.getBody();
+
+        logger.log(Level.INFO, "Response: {0}", loanScheduleResponse);
+        assert loanScheduleResponse != null;
+
+        LoanScheduleResponse.Result result = loanScheduleResponse.getResponseMessage().getResult();
+        if (result.getLoanSchedules() != null) {
+            DateTimeFormatter t24Format = DateTimeFormatter.ofPattern("yyyyMMdd");
+            DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("dd/MM/yy");
+            for (LoanScheduleResponse.LoanSchedules schedule : result.getLoanSchedules()) {
+                if (schedule.getScheduleDate() != null && !schedule.getScheduleDate().isEmpty()) {
+                    LocalDate date = LocalDate.parse(schedule.getScheduleDate(), t24Format);
+                    schedule.setScheduleDate(date.format(outputFormat));
+                }
+            }
+        }
+
+        return result;
     }
 }

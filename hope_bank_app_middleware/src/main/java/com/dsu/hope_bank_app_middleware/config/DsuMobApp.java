@@ -22,6 +22,7 @@ public class DsuMobApp {
     private String loan_balance_txn_type;
     private String account_balance_txn_type;
     private String loan_repayment_txn_type;
+    private String loan_schedule_txn_type;
     private String loan_repayment_momo_txn_type;
     private String airtime_top_up_txn_type;
     private String transfer_to_other_bank_txn_type;

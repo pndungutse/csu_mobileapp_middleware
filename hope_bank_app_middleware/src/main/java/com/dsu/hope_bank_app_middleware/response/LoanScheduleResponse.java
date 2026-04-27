@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoanRepaymentResponse {
+public class LoanScheduleResponse {
     private String uniqueReference;
     private String serviceStatus;
     private ResponseMessage responseMessage;
@@ -30,10 +32,18 @@ public class LoanRepaymentResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Result {
-        private String our_reference;
         private String ret_code;
-        private String ret_message;
-        private String account_balance;
-        private String amount;
+        private String loanId;
+        private List<LoanSchedules> loanSchedules;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class LoanSchedules {
+        private String scheduleDate;
+        private String scheduleAmount;
+        private String scheduleActualInstallment;
+        private String scheduleInterest;
     }
 }
