@@ -57,6 +57,9 @@ public class SubMenuServiceImpl implements SubMenuService {
         subMenu.setIcon(request.getIcon());
         subMenu.setSubMenuActionUrl(request.getSubMenuActionUrl());
         subMenu.setSubMenuCustomImplementation(request.getSubMenuCustomImplementation());
+        subMenu.setCustomImplementationMethod(request.getCustomImplementationMethod());
+        subMenu.setCustomImplementationUrl(request.getCustomImplementationUrl());
+        subMenu.setCustomImplementationListTagsDisplay(request.getCustomImplementationListTagsDisplay());
         subMenu.setSubMenuBelongToMenu(request.getSubMenuBelongToMenu());
         subMenu.setServiceWaitResponse(request.getServiceWaitResponse());
         if (request.getSubMenuDisplayOrder() != null) {
@@ -190,6 +193,9 @@ public class SubMenuServiceImpl implements SubMenuService {
         subMenu.setSubMenuBelongToMenu(request.getSubMenuBelongToMenu());
         subMenu.setSubMenuActionUrl(request.getSubMenuActionUrl());
         subMenu.setSubMenuCustomImplementation(request.getSubMenuCustomImplementation());
+        subMenu.setCustomImplementationMethod(request.getCustomImplementationMethod());
+        subMenu.setCustomImplementationUrl(request.getCustomImplementationUrl());
+        subMenu.setCustomImplementationListTagsDisplay(request.getCustomImplementationListTagsDisplay());
         subMenu.setServiceWaitResponse(request.getServiceWaitResponse());
         
         // Update display order if provided

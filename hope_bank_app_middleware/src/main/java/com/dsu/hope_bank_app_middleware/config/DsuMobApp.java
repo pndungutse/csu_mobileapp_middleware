@@ -38,6 +38,8 @@ public class DsuMobApp {
     private String ips_name_lookup_url;
     private String ips_qr_read_url;
     private String ips_qr_start_of_payment_url;
+    private String ips_get_all_request_to_pay_txns;
+    private String ips_request_to_pay_confirm;
     private String ussd_code;
     private String sms_api_key;
     private String sms_base_url;

@@ -1,10 +1,7 @@
 package com.dsu.hope_bank_app_middleware.controller;
 
 import com.dsu.hope_bank_app_middleware.request.GenericRequest;
-import com.dsu.hope_bank_app_middleware.request.ipsRequest.IPSPayQrRequest;
-import com.dsu.hope_bank_app_middleware.request.ipsRequest.IPSTransferRequest;
-import com.dsu.hope_bank_app_middleware.request.ipsRequest.IpsQrStartOfPaymentRequest;
-import com.dsu.hope_bank_app_middleware.request.ipsRequest.IpsRequestToPayRequest;
+import com.dsu.hope_bank_app_middleware.request.ipsRequest.*;
 import com.dsu.hope_bank_app_middleware.response.GenericDataResponse;
 import com.dsu.hope_bank_app_middleware.response.GenericResponse;
 import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsQrReadResponse;
@@ -68,6 +65,20 @@ public class IPSPaymentsController {
     public ResponseEntity<GenericDataResponse<RequestToPayResponse>> ipsRequestToPay(
             @RequestBody IpsRequestToPayRequest request) {
         GenericDataResponse<RequestToPayResponse> response = ipsPaymentsService.ipsRequestToPay(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/ips_request_to_pay_transactions")
+    public ResponseEntity<GenericDataResponse> getRequestToPayTransactions(
+            @RequestBody GenericRequest request) {
+        GenericDataResponse response = ipsPaymentsService.getRequestToPayTransactions(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/ips_transfer_request_confirm")
+    public ResponseEntity<TransferResponse.Result> ipsTransferRequestConfirm(
+            @RequestBody IPSTransferConfirmRequest request) {
+        TransferResponse.Result response= ipsPaymentsService.ipsTransferRequestConfirm(request);
         return ResponseEntity.ok(response);
     }
 }

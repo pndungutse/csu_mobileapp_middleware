@@ -38,6 +38,12 @@ public class SubMenu {
     private Integer subMenuDisplayOrder;
     @JsonProperty("sub_menu_custom_implementation")
     private SubMenuCustomerImplementation subMenuCustomImplementation;
+    @JsonProperty("sub_menu_custom_implementation_url")
+    private String customImplementationUrl;
+    @JsonProperty("sub_menu_custom_implementation_method")
+    private CustomImplementationMethod customImplementationMethod;
+    @JsonProperty("sub_menu_custom_implementation_list_tags_display")
+    private String customImplementationListTagsDisplay;
     @JsonProperty("sub_menu_wait_response")
     private String serviceWaitResponse;
     @JsonProperty("sub_menu_item_added_date")
