@@ -1,5 +1,6 @@
 package com.dsu.hope_bank_app_middleware.response.navigations;
 
+import com.dsu.hope_bank_app_middleware.enumeration.CustomImplementationMethod;
 import com.dsu.hope_bank_app_middleware.enumeration.MainMenuBelong;
 import com.dsu.hope_bank_app_middleware.exception.SuccessResponse;
 import com.dsu.hope_bank_app_middleware.enumeration.Status;
@@ -39,6 +40,16 @@ public class SubMenuResponse {
     private MainMenuBelong subMenuBelongToMenu;
     @JsonProperty("sub_menu_display_order")
     private Integer subMenuDisplayOrder;
+    @JsonProperty("sub_menu_wait_response")
+    private String serviceWaitResponse;
+    @JsonProperty("sub_menu_custom_implementation")
+    private String subMenuCustomImplementation;
+    @JsonProperty("sub_menu_custom_implementation_url")
+    private String customImplementationUrl;
+    @JsonProperty("sub_menu_custom_implementation_method")
+    private CustomImplementationMethod customImplementationMethod;
+    @JsonProperty("sub_menu_custom_implementation_list_tags_display")
+    private String customImplementationListTagsDisplay;
     @JsonProperty("sub_menu_associate_bank")
     private String subMenuAssociateBank;
     @JsonProperty("sub_menu_item_added_date")

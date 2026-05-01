@@ -1,8 +1,6 @@
 package com.dsu.hope_bank_app_middleware.entity.navigations;
 
-import com.dsu.hope_bank_app_middleware.enumeration.MainMenuBelong;
-import com.dsu.hope_bank_app_middleware.enumeration.Status;
-import com.dsu.hope_bank_app_middleware.enumeration.SubMenuCategory;
+import com.dsu.hope_bank_app_middleware.enumeration.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,6 +36,16 @@ public class SubMenu {
     private MainMenuBelong subMenuBelongToMenu;
     @JsonProperty("sub_menu_display_order")
     private Integer subMenuDisplayOrder;
+    @JsonProperty("sub_menu_custom_implementation")
+    private SubMenuCustomerImplementation subMenuCustomImplementation;
+    @JsonProperty("sub_menu_custom_implementation_url")
+    private String customImplementationUrl;
+    @JsonProperty("sub_menu_custom_implementation_method")
+    private CustomImplementationMethod customImplementationMethod;
+    @JsonProperty("sub_menu_custom_implementation_list_tags_display")
+    private String customImplementationListTagsDisplay;
+    @JsonProperty("sub_menu_wait_response")
+    private String serviceWaitResponse;
     @JsonProperty("sub_menu_item_added_date")
     private Date subMenuItemAddedDate;
     @JsonProperty("sub_menu_item_updated_date")

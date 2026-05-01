@@ -5,5 +5,6 @@ public enum FormElementType {
     DROPDOWN,
     RADIO,
     CHECKBOX,
-    TEXTAREA
+    TEXTAREA,
+    DATE
 }

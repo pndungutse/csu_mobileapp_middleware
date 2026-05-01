@@ -56,7 +56,12 @@ public class SubMenuServiceImpl implements SubMenuService {
         subMenu.setSubMenuCategory(request.getSubMenuCategory());
         subMenu.setIcon(request.getIcon());
         subMenu.setSubMenuActionUrl(request.getSubMenuActionUrl());
+        subMenu.setSubMenuCustomImplementation(request.getSubMenuCustomImplementation());
+        subMenu.setCustomImplementationMethod(request.getCustomImplementationMethod());
+        subMenu.setCustomImplementationUrl(request.getCustomImplementationUrl());
+        subMenu.setCustomImplementationListTagsDisplay(request.getCustomImplementationListTagsDisplay());
         subMenu.setSubMenuBelongToMenu(request.getSubMenuBelongToMenu());
+        subMenu.setServiceWaitResponse(request.getServiceWaitResponse());
         if (request.getSubMenuDisplayOrder() != null) {
             subMenu.setSubMenuDisplayOrder(request.getSubMenuDisplayOrder());
         }
@@ -194,6 +199,11 @@ public class SubMenuServiceImpl implements SubMenuService {
         subMenu.setSubMenuCategory(request.getSubMenuCategory());
         subMenu.setSubMenuBelongToMenu(request.getSubMenuBelongToMenu());
         subMenu.setSubMenuActionUrl(request.getSubMenuActionUrl());
+        subMenu.setSubMenuCustomImplementation(request.getSubMenuCustomImplementation());
+        subMenu.setCustomImplementationMethod(request.getCustomImplementationMethod());
+        subMenu.setCustomImplementationUrl(request.getCustomImplementationUrl());
+        subMenu.setCustomImplementationListTagsDisplay(request.getCustomImplementationListTagsDisplay());
+        subMenu.setServiceWaitResponse(request.getServiceWaitResponse());
         
         // Update display order if provided
         if (request.getSubMenuDisplayOrder() != null) {
@@ -203,6 +213,7 @@ public class SubMenuServiceImpl implements SubMenuService {
         subMenu.setSubMenuItemUpdatedDate(new Date());
 
         SubMenu updatedSubMenu = subMenuRepository.save(subMenu);
+        System.out.println("Submenu to update: "+updatedSubMenu);
 
         SuccessResponse successResponse = SuccessResponse.builder()
                 .type(ResponseType.success)
@@ -210,8 +221,12 @@ public class SubMenuServiceImpl implements SubMenuService {
                 .status(HttpStatus.OK)
                 .build();
 
+
         SubMenuResponse subMenuResponse = mappings.mapToSubmenuResponse(updatedSubMenu);
+
         subMenuResponse.setSuccessResponse(successResponse);
+
+        System.out.println("Response: "+subMenuResponse);
 
         return new ResponseEntity<>(subMenuResponse, HttpStatus.OK);
     }

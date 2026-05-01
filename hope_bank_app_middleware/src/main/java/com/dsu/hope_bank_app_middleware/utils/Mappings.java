@@ -1,10 +1,11 @@
 package com.dsu.hope_bank_app_middleware.utils;
 
 import com.dsu.hope_bank_app_middleware.entity.BeneficiaryBank;
+import com.dsu.hope_bank_app_middleware.entity.navigations.GeneralNeededInfo;
 import com.dsu.hope_bank_app_middleware.entity.navigations.*;
-import com.dsu.hope_bank_app_middleware.enumeration.Status;
 import com.dsu.hope_bank_app_middleware.repository.*;
 import com.dsu.hope_bank_app_middleware.response.BeneficiaryBankResponse;
+import com.dsu.hope_bank_app_middleware.response.navigations.GeneralNeededInfoResponse;
 import com.dsu.hope_bank_app_middleware.response.navigations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -170,9 +171,30 @@ public class Mappings {
                 .subMenuCategory(subMenu.getSubMenuCategory())
                 .subMenuBelongToMenu(subMenu.getSubMenuBelongToMenu())
                 .subMenuDisplayOrder(subMenu.getSubMenuDisplayOrder())
+                .serviceWaitResponse(subMenu.getServiceWaitResponse())
+                .subMenuCustomImplementation(subMenu.getSubMenuCustomImplementation() != null ? subMenu.getSubMenuCustomImplementation().name() : null)
+                .customImplementationUrl(subMenu.getCustomImplementationUrl())
+                .customImplementationMethod(subMenu.getCustomImplementationMethod())
+                .customImplementationListTagsDisplay(subMenu.getCustomImplementationListTagsDisplay())
                 .subMenuItemAddedDate(subMenu.getSubMenuItemAddedDate())
                 .subMenuItemUpdatedDate(subMenu.getSubMenuItemUpdatedDate())
                 .formElements(formElementResponses)
+                .build();
+    }
+
+    public GeneralNeededInfoResponse mapToGeneralNeededInfoResponse(GeneralNeededInfo info) {
+        return GeneralNeededInfoResponse.builder()
+                .id(info.getId())
+                .primaryColor(info.getPrimaryColor())
+                .secondaryColor(info.getSecondaryColor())
+                .thirdColor(info.getThirdColor())
+                .fourthColor(info.getFourthColor())
+                .contactEmail(info.getContactEmail())
+                .contactPhoneCall(info.getContactPhoneCall())
+                .contactPhoneSms(info.getContactPhoneSms())
+                .isAnyServiceDown(info.getIsAnyServiceDown())
+                .bannerWarningMessage(info.getBannerWarningMessage())
+                .associateBank(info.getBank() != null ? info.getBank().getAssociateBankName() : null)
                 .build();
     }
 
