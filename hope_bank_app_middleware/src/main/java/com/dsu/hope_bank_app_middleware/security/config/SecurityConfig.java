@@ -46,11 +46,13 @@ public class SecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize)->
 //                        authorize.anyRequest().authenticated()
-                        authorize.requestMatchers(new AntPathRequestMatcher("/api/v1/navigation/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/auth/login")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/auth/register")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/auth/refresh")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/auth/isPasscodeValid")).permitAll()
+//                        authorize.requestMatchers(new AntPathRequestMatcher("/api/v1/navigation/**")).permitAll()
+//                                .requestMatchers(new AntPathRequestMatcher("/api/auth/login")).permitAll()
+//                                .requestMatchers(new AntPathRequestMatcher("/api/auth/register")).permitAll()
+//                                .requestMatchers(new AntPathRequestMatcher("/api/auth/refresh")).permitAll()
+//                                .requestMatchers(new AntPathRequestMatcher("/api/auth/isPasscodeValid")).permitAll()
+//                                .requestMatchers(new AntPathRequestMatcher("/api/v1/transfers/ips/**")).permitAll()
+                                authorize.requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
                                 .anyRequest().authenticated()
                 ).exceptionHandling( exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint)

@@ -192,7 +192,9 @@ public class AuthServiceImpl implements AuthService {
         user.setMustChangePassword(true);
 
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName("ROLE_USER").get();
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new CustomAPIException(HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Role 'ROLE_USER' not found. Please seed the roles collection in the database."));
         roles.add(userRole);
         user.setRoles(roles);
 

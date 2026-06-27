@@ -674,7 +674,7 @@ public class IPSPaymentsServiceImpl implements IPSPaymentsService {
                             && accountIds.stream().anyMatch(acctId ->
                                 item.getProcessedMessage().contains("<DbtrAcct><Id><Othr><Id>" + acctId + "</Id>")))
                     .map(this::parseRtpTransaction)
-                    .filter(this::isNotExpired)
+//                    .filter(this::isNotExpired)
                     .collect(Collectors.toList());
 
             logger.log(Level.INFO, "Filtered {0} RTP transactions for customer: {1}",
