@@ -14,6 +14,8 @@ public class IPSTransferRequest {
     private String tomember;
     private String member_name;
     private String phone_number;
+    private String purpPrtry;
+    private String isCreditorSwift;
     private String unique_txn_ref;
     private String txn_type;
 }

@@ -1,5 +1,6 @@
 package com.dsu.hope_bank_app_middleware.controller;
 
+import com.dsu.hope_bank_app_middleware.entity.IpsQrCode;
 import com.dsu.hope_bank_app_middleware.request.GenericRequest;
 import com.dsu.hope_bank_app_middleware.request.ipsRequest.*;
 import com.dsu.hope_bank_app_middleware.response.GenericDataResponse;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
@@ -39,10 +42,18 @@ public class IPSPaymentsController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PostMapping("/transfer_to_ips_qr")
+//    public ResponseEntity<TransferResponse.Result> processTransferIpsPayQr(@RequestBody IPSPayQrRequest ipsPayQrRequest) {
+//        TransferResponse.Result response = ipsPaymentsService.processTransferIpsPayQr(ipsPayQrRequest);
+//        return ResponseEntity.ok(response);
+//    }
+
+//    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PostMapping("/transfer_to_ips_qr_fixed_dynamic")
     @PostMapping("/transfer_to_ips_qr")
-    public ResponseEntity<TransferResponse.Result> processTransferIpsPayQr(@RequestBody IPSPayQrRequest ipsPayQrRequest) {
-        TransferResponse.Result response = ipsPaymentsService.processTransferIpsPayQr(ipsPayQrRequest);
+    public ResponseEntity<TransferResponse.Result> processTransferIpsPayQrFixedDynamic(@RequestBody IPSPayQrRequest ipsPayQrRequest) {
+        TransferResponse.Result response = ipsPaymentsService.processTransferIpsPayQrFixedDynamic(ipsPayQrRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -56,6 +67,20 @@ public class IPSPaymentsController {
     @PostMapping("/qr_code_information")
     public ResponseEntity<GenericDataResponse<IpsQrReadResponse>> getIpsQrCodeInfo(@RequestBody GenericRequest genericRequest) {
         GenericDataResponse<IpsQrReadResponse> response = ipsPaymentsService.getIpsQrCodeInfo(genericRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/qr_code_create")
+    public ResponseEntity<GenericDataResponse<TransferResponse.Result>> createIpsQrCode(
+            @RequestBody IpsQrCreateRequest request) {
+        GenericDataResponse<TransferResponse.Result> response = ipsPaymentsService.createIpsQrCode(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/qr_codes")
+    public ResponseEntity<GenericDataResponse<List<IpsQrCode>>> getCreatedIpsQrCodes(
+            @RequestBody GenericRequest request) {
+        GenericDataResponse<List<IpsQrCode>> response = ipsPaymentsService.getCreatedIpsQrCodes(request);
         return ResponseEntity.ok(response);
     }
 

@@ -43,11 +43,20 @@ public class DsuMobApp {
     private String bank_ips_request_to_pay;
     private String ips_name_lookup_url;
     private String ips_qr_read_url;
+    private String ips_qr_create_url;
     private String ips_qr_start_of_payment_url;
     private String ips_get_all_request_to_pay_txns;
+    /** Mongo database that holds IPS gateway {@code message_flows}. */
+    private String ips_t24_gateway_db;
     private String ips_request_to_pay_confirm;
     private String ussd_code;
     private String sms_api_key;
     private String sms_base_url;
+    /**
+     * Folder where generated QR PNGs are stored.
+     * Prefer OS-neutral values such as {@code ${user.home}/Desktop/qr-codes}
+     * so the same config works on Mac and Windows.
+     */
+    private String qr_code_storage_path;
 
 }

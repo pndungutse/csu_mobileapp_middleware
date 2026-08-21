@@ -34,6 +34,7 @@ public class BeneficiaryBankServiceImpl implements BeneficiaryBankService {
         BeneficiaryBank beneficiaryBank = new BeneficiaryBank();
         beneficiaryBank.setBeneficiaryCode(request.getBeneficiaryCode());
         beneficiaryBank.setBeneficiaryName(request.getBeneficiaryName());
+        beneficiaryBank.setBeneficiaryInstType(request.getBeneficiaryInstType());
         beneficiaryBank.setBeneficiaryStatus(Status.ACTIVE);
         beneficiaryBank.setBeneficiaryAddedDate(new Date());
 
@@ -61,7 +62,7 @@ public class BeneficiaryBankServiceImpl implements BeneficiaryBankService {
 
             GenericResponse response = GenericResponse.builder()
                     .id(bank.getBeneficiaryCode())
-                    .name(bank.getBeneficiaryName())
+                    .name(bank.getBeneficiaryName()+"/"+bank.getBeneficiaryInstType())
                     .retCode("0")
                     .build();
 

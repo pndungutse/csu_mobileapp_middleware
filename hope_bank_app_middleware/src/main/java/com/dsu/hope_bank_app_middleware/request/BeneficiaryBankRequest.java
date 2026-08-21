@@ -15,4 +15,6 @@ public class BeneficiaryBankRequest {
     private String beneficiaryCode;
     @JsonProperty("beneficiary_name")
     private String beneficiaryName;
+    @JsonProperty("beneficiary_inst_type")
+    private String beneficiaryInstType;
 }

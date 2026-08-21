@@ -13,4 +13,7 @@ public class GenericResponse {
     private String id;
     private String name;
     private String retCode;
+    private String otherInfo;
+    /** From IPS name lookup: "true" when servicer used bic, "false" when memberId. */
+    private String isDebtorSwift;
 }

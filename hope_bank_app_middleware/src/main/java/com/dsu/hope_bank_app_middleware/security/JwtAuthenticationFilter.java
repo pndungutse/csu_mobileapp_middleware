@@ -70,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 User user = userRepository.findByUsername(username).orElse(null);
 
                 // Block access to non-auth resources until the user changes the initial password.
-                if (user != null && user.isMustChangePassword() && !isPasswordChangeAllowedPath(request.getRequestURI())) {
+                if (user != null && user.isMustChangePassword() && !isPasswordChangeAllowedPath(request)) {
                     writeJsonError(response, HttpServletResponse.SC_FORBIDDEN, "Password change required before accessing this resource");
                     return;
                 }
@@ -111,7 +111,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private boolean isPasswordChangeAllowedPath(String path) {
+    private boolean isPasswordChangeAllowedPath(HttpServletRequest request) {
+        // Prefer servletPath so a deployed context-path (or proxy prefix on RequestURI)
+        // does not break the exact allow-list match that works locally.
+        String path = request.getServletPath();
+        if (!StringUtils.hasText(path)) {
+            path = request.getRequestURI();
+            String contextPath = request.getContextPath();
+            if (StringUtils.hasText(contextPath) && path.startsWith(contextPath)) {
+                path = path.substring(contextPath.length());
+            }
+        }
+        if (path.length() > 1 && path.endsWith("/")) {
+            path = path.substring(0, path.length() - 1);
+        }
+
         return "/api/auth/login".equals(path)
                 || "/api/auth/register".equals(path)
                 || "/api/auth/refresh".equals(path)

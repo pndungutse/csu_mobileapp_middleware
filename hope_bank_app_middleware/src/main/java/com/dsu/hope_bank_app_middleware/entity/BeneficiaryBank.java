@@ -20,6 +20,7 @@ public class BeneficiaryBank {
     private String Id;
     private String beneficiaryCode;
     private String beneficiaryName;
+    private String beneficiaryInstType;
     private Status beneficiaryStatus;
     private Date beneficiaryAddedDate;
     private Date beneficiaryUpdatedDate;

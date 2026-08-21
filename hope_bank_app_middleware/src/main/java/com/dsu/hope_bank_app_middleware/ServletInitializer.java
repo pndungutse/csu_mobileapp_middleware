@@ -7,6 +7,7 @@ public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		// application.properties (classpath) imports dsumobapp.properties for JWT/T24/etc.
 		return application.sources(HopeBankAppMiddlewareApplication.class);
 	}
 

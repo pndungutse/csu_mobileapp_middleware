@@ -1,5 +1,6 @@
 package com.dsu.hope_bank_app_middleware.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 @Data
@@ -20,6 +21,7 @@ public class TransferResponse {
     }
 
     @Data
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Result {
         private String our_reference;
         private String ret_code;
@@ -27,6 +29,20 @@ public class TransferResponse {
         private String fee_amount;
         private String account_balance;
         private String amount;
+
+        // Optional fields used by IPS QR create (omitted when null on normal transfers)
+        private String qrCodeUrl;
+        private String qrType;
+        private String creditorName;
+        private String creditorAccount;
+        private String memberId;
+        private String currency;
+        private String uetr;
+        private String qrHeaderUUID;
+        private String fileName;
+        private String savedFilePath;
+        /** Gateway-provided PNG as base64 (when available). */
+        private String qrImageBase64;
     }
 
 }

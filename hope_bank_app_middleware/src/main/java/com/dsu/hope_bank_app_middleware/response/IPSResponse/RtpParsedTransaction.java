@@ -1,11 +1,14 @@
 package com.dsu.hope_bank_app_middleware.response.IPSResponse;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -52,4 +55,11 @@ public class RtpParsedTransaction {
 
     @JsonProperty("initiating_party")
     private String initiatingParty;
+
+    /** ISO instant used only for validity filtering; omitted from API JSON. */
+    @JsonIgnore
+    private Instant creationInstant;
+    /** ISO instant used only for validity filtering; omitted from API JSON. */
+    @JsonIgnore
+    private Instant expiryInstant;
 }

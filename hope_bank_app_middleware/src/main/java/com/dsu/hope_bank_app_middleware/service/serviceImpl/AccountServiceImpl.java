@@ -68,6 +68,12 @@ public class AccountServiceImpl implements AccountService {
         requestBody.put("sequence", uniqueRef);
 
         T24EnvironmentConfig t24Config = T24EnvironmentResolver.resolve(dsuMobApp, accountRequest.getEnvironment());
+        if (t24Config.getUrl() == null || t24Config.getUrl().trim().isEmpty()) {
+            throw new RuntimeException(
+                    "T24 base URL is not configured. Ensure dsumobapp.properties is loaded "
+                            + "(spring.config.name=dsumobapp) and dsumobapp.t24_base_url is set."
+            );
+        }
         T24RequestBuilder.T24Request<Map<String, Object>> t24Request = T24RequestBuilder.build(
                 t24Config.getUrl(),
                 t24Config.getSenderReference(),
@@ -266,6 +272,13 @@ public class AccountServiceImpl implements AccountService {
             response.setUniqueReference(rootNode.path("uniqueReference").asText());
             response.setServiceStatus(rootNode.path("serviceStatus").asText());
             response.setCustomerName(responseMessage.path("customerName").asText());
+            String customerNumber = firstNonBlank(
+                    responseMessage.path("customerNumber").asText(null),
+                    responseMessage.path("customer_number").asText(null),
+                    responseMessage.path("Customerid").asText(null),
+                    responseMessage.path("customerId").asText(null)
+            );
+            response.setCustomerNumber(customerNumber);
 
             List<AccountResponse.AccountDetails> accounts = new ArrayList<>();
             for (JsonNode accountNode : responseMessage.path("accounts")) {
@@ -315,6 +328,18 @@ public class AccountServiceImpl implements AccountService {
         } catch (Exception e) {
             throw new RuntimeException("Error parsing T24 response", e);
         }
+    }
+
+    private static String firstNonBlank(String... values) {
+        if (values == null) {
+            return null;
+        }
+        for (String value : values) {
+            if (value != null && !value.trim().isEmpty() && !"null".equalsIgnoreCase(value.trim())) {
+                return value.trim();
+            }
+        }
+        return null;
     }
 
 }

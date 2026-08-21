@@ -16,6 +16,7 @@ public class AccountResponse {
     private String uniqueReference;
     private String serviceStatus;
     private String customerName;
+    private String customerNumber;
     private List<AccountDetails> accounts;
 
     // Nested class for account details

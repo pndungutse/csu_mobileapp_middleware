@@ -8,6 +8,9 @@ import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsQrReadResponse;
 import com.dsu.hope_bank_app_middleware.response.IPSResponse.IpsQrStartOfPaymentResponse;
 import com.dsu.hope_bank_app_middleware.response.IPSResponse.RequestToPayResponse;
 import com.dsu.hope_bank_app_middleware.response.TransferResponse;
+import com.dsu.hope_bank_app_middleware.entity.IpsQrCode;
+
+import java.util.List;
 
 public interface IPSPaymentsService {
     GenericResponse getIpsAccountInformation(GenericRequest genericRequest);
@@ -16,9 +19,15 @@ public interface IPSPaymentsService {
 
     TransferResponse.Result processTransferIpsPayQr(IPSPayQrRequest ipsPayQrRequest);
 
+    TransferResponse.Result processTransferIpsPayQrFixedDynamic(IPSPayQrRequest ipsPayQrRequest);
+
     GenericResponse getIpsQrInformation(GenericRequest genericRequest);
 
     GenericDataResponse<IpsQrReadResponse> getIpsQrCodeInfo(GenericRequest genericRequest);
+
+    GenericDataResponse<TransferResponse.Result> createIpsQrCode(IpsQrCreateRequest request);
+
+    GenericDataResponse<List<IpsQrCode>> getCreatedIpsQrCodes(GenericRequest request);
 
     GenericDataResponse<IpsQrStartOfPaymentResponse> startIpsQrStartOfPayment(IpsQrStartOfPaymentRequest request);
 
@@ -27,4 +36,6 @@ public interface IPSPaymentsService {
     GenericDataResponse getRequestToPayTransactions(GenericRequest request);
 
     TransferResponse.Result ipsTransferRequestConfirm(IPSTransferConfirmRequest request);
+
+
 }

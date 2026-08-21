@@ -1,7 +1,5 @@
 package com.dsu.hope_bank_app_middleware.response.IPSResponse;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
@@ -22,11 +20,39 @@ public class IpsNameLookupResponse {
         private String other;
     }
 
+    /**
+     * IPS may return either {@code bic} (SWIFT bank) or {@code memberId} (non-SWIFT / MFI).
+     * Keep them as separate fields so callers can set isDebtorSwift correctly.
+     */
     @Data
     public static class Servicer {
-        @JsonProperty("bic")
-        @JsonAlias({"memberId"})
         private String bic;
+        private String memberId;
+
+        /** Prefer bic when present; otherwise memberId. */
+        public String resolveAgentId() {
+            if (bic != null && !bic.trim().isEmpty()) {
+                return bic.trim();
+            }
+            if (memberId != null && !memberId.trim().isEmpty()) {
+                return memberId.trim();
+            }
+            return null;
+        }
+
+        /**
+         * {@code true} when response used bic (SWIFT), {@code false} when it used memberId,
+         * {@code null} when neither is present.
+         */
+        public Boolean isDebtorSwift() {
+            if (bic != null && !bic.trim().isEmpty()) {
+                return Boolean.TRUE;
+            }
+            if (memberId != null && !memberId.trim().isEmpty()) {
+                return Boolean.FALSE;
+            }
+            return null;
+        }
     }
 
     @Data

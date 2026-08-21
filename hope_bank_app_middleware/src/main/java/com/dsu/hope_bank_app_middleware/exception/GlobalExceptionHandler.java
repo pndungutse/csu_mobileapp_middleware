@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -31,6 +32,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 webRequest.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * RestTemplate upstream failures (T24/IPS/SMS). The "details" URI is this middleware's
+     * inbound path (e.g. /csumobileappnew/api/...), not the missing mapping — the HTML 404
+     * body is from the external service URL configured in dsumobapp.properties.
+     */
+    @ExceptionHandler(RestClientResponseException.class)
+    public ResponseEntity<ErrorDetails> handleRestClientResponseException(RestClientResponseException exception,
+                                                                          WebRequest webRequest) {
+        String message = "Upstream service returned HTTP "
+                + exception.getRawStatusCode()
+                + ": "
+                + exception.getStatusText()
+                + ". Check dsumobapp T24/IPS URLs from the server (not the /csumobileappnew app path).";
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), message, webRequest.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_GATEWAY);
+    }
+
     // global exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception exception,

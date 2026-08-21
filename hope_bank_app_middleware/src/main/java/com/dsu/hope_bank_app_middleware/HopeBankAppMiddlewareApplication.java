@@ -14,18 +14,14 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Collections;
-import java.util.Set;
-
 @SpringBootApplication
 public class HopeBankAppMiddlewareApplication {
 
 	public static void main(String[] args) {
 		System.out.println("Now Running");
-
-		SpringApplication application = new SpringApplication(HopeBankAppMiddlewareApplication.class);
-		application.setDefaultProperties(Collections.singletonMap("spring.config.name", "dsumobapp"));
-		application.run(args);
+		// Config comes from application.properties -> spring.config.import=dsumobapp.properties
+		// (same path used by ServletInitializer on JBoss WAR deploy)
+		SpringApplication.run(HopeBankAppMiddlewareApplication.class, args);
 	}
 
 	@Bean
@@ -49,42 +45,42 @@ public class HopeBankAppMiddlewareApplication {
 
 	}
 
-	// @Bean
-	// public CommandLineRunner seedUsersAndRoles(
-	// 		RoleRepository roleRepository,
-	// 		UserRepository userRepository,
-	// 		PasswordEncoder passwordEncoder
-	// ) {
-	// 	return args -> {
-	// 		Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-	// 				.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_ADMIN").build()));
-	// 		Role userRole = roleRepository.findByName("ROLE_USER")
-	// 				.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_USER").build()));
+	 @Bean
+	 public CommandLineRunner seedUsersAndRoles(
+	 		RoleRepository roleRepository,
+	 		UserRepository userRepository,
+	 		PasswordEncoder passwordEncoder
+	 ) {
+	 	return args -> {
+	 		Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+	 				.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_ADMIN").build()));
+	 		Role userRole = roleRepository.findByName("ROLE_USER")
+	 				.orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_USER").build()));
 
-	// 		if (!userRepository.existsByUsername("pndungutse")) {
-	// 			userRepository.save(User.builder()
-	// 					.first_name("Ndungutse")
-	// 					.last_name("Patrick")
-	// 					.username("0788121212")
-	// 					.env("TURAME")
-	// 					.email("pndungutse@example.com")
-	// 					.password(passwordEncoder.encode("Rwanda@Kigali123"))
-	// 					.roles(Collections.singleton(userRole))
-	// 					.build());
-	// 		}
-
-	// 		if (!userRepository.existsByUsername("admin")) {
-	// 			userRepository.save(User.builder()
-	// 					.first_name("admin")
-	// 					.last_name("admin")
-	// 					.username("0788000000")
-	// 					.env("Turame")
-	// 					.email("admin@example.com")
-	// 					.password(passwordEncoder.encode("admin"))
-	// 					.roles(Collections.singleton(adminRole))
-	// 					.build());
-	// 		}
-	// 	};
-	// }
+//	 		if (!userRepository.existsByUsername("pndungutse")) {
+//	 			userRepository.save(User.builder()
+//	 					.first_name("Ndungutse")
+//	 					.last_name("Patrick")
+//	 					.username("0788121212")
+//	 					.env("TURAME")
+//	 					.email("pndungutse@example.com")
+//	 					.password(passwordEncoder.encode("Rwanda@Kigali123"))
+//	 					.roles(Collections.singleton(userRole))
+//	 					.build());
+//	 		}
+//
+//	 		if (!userRepository.existsByUsername("admin")) {
+//	 			userRepository.save(User.builder()
+//	 					.first_name("admin")
+//	 					.last_name("admin")
+//	 					.username("0788000000")
+//	 					.env("Turame")
+//	 					.email("admin@example.com")
+//	 					.password(passwordEncoder.encode("admin"))
+//	 					.roles(Collections.singleton(adminRole))
+//	 					.build());
+//	 		}
+	 	};
+	 }
 
 }

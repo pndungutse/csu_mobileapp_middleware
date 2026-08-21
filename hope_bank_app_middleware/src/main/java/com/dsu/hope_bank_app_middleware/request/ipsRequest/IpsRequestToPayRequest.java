@@ -16,5 +16,8 @@ public class IpsRequestToPayRequest {
     private String receiver_name;
     private String receiver_account;
     private String beneficiary_name;
+    private String isDebtorSwift;
+    private String create_date;
+    private String timePlus;
     private String txn_type;
 }
